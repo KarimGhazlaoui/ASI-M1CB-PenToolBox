@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./img/logo/logo_large_bm.png">
+</p>
+
 # PenToolBox
 
 Bienvenue dans PenToolBox, un projet développé dans le cadre de ma première année de master en ingénierie en cybersécurité.
