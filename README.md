@@ -20,7 +20,8 @@ Cet outil a été conçu dans le but d'aider les professionnels de la cybersécu
 
 ## Commentaires
 
-Veuillez noter que l'outil est encore en phase de développement initial. Par conséquent, il n'est pas compilé et nécessite d'être lancé via Python en utilisant main.py.
+Veuillez noter que l'outil est encore en phase de développement initial. 
+Par conséquent, il n'est pas compilé et nécessite d'être lancé via Python en utilisant main.py.
 
 ## Installation
 
