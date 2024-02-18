@@ -8,7 +8,7 @@ Bienvenue dans PenToolBox, un projet développé dans le cadre de ma première a
 
 ## Introduction
 
-Cet outil a été conçu dans le but d'aider les professionnels de la cybersécurité à évaluer la sécurité des systèmes informatiques en identifiant les vulnérabilités et en proposant des solutions pour les corriger.
+Cet outil a été conçu dans le but d'aider les professionnels de la cybersécurité à évaluer la sécurité des systèmes informatiques en identifiant les vulnérabilités.
 
 ## Fonctionnalités
 
