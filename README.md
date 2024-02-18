@@ -4,7 +4,7 @@
 
 # PenToolBox
 
-Bienvenue dans PenToolBox, un projet développé dans le cadre de ma première année de master en ingénierie en cybersécurité.
+PenToolBox est un un outil développé dans le cadre du projet de ma première année de master en ingénierie en cybersécurité.
 
 ## Introduction
 
