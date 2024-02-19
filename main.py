@@ -20,14 +20,11 @@ class SplashScreen(tk.Toplevel):
                 self.transparent_image.putpixel((x, y), (r, g, b, a))
 
         self.tk_image = ImageTk.PhotoImage(self.transparent_image)
-        image_width, image_height = self.transparent_image.size
-
-        height = image_height
-        width = image_width
-
+        width, height = self.transparent_image.size
         x = (self.winfo_screenwidth() // 2) - (width // 2)
         y = (self.winfo_screenheight() // 2) - (height // 2)
-        self.geometry(f"{width}x{height}+{x}+{y}")
+        self.geometry(f'+{x}+{y}')
+        
         self.overrideredirect(1)
         self.canvas = tk.Canvas(self, bg='white', bd=0, highlightthickness=0, width=width, height=height)
         self.canvas.pack()
@@ -59,12 +56,12 @@ class App(customtkinter.CTk):
         # Destroy the splash screen and show the main window
         self.splash.destroy()
         self.title("PenToolBox by KGB")
-        w = self.winfo_screenwidth() // 2 - 1860 // 2
-        h = self.winfo_screenheight() // 2 - 940 // 2
-        self.geometry('%dx%d+%d+%d' % (1860, 940, w, h))
-        self.minsize(1860, 940)
-        self.maxsize(1860, 940)
-        self.resizable(False, False)
+        w = self.winfo_screenwidth() // 2 - 1280 // 2
+        h = self.winfo_screenheight() // 2 - 720 // 2
+        self.geometry('%dx%d+%d+%d' % (1280, 720, w, h))
+        #self.minsize(1860, 940)
+        #self.maxsize(1860, 940)
+        self.resizable(True, True)
         self.iconbitmap("img/logo/logo.ico")
 
         # configure grid layout (4x4)

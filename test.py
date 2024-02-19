@@ -3,7 +3,7 @@ import customtkinter
 from PIL import Image, ImageTk
 
 class SplashScreen(tk.Toplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, screen_width, screen_height):
         super().__init__(parent)
         self.original_image = Image.open("img/splash/splash_transparency.png")
         self.transparency_color = (0, 0, 0)  # Red color RGB values
@@ -20,14 +20,12 @@ class SplashScreen(tk.Toplevel):
                 self.transparent_image.putpixel((x, y), (r, g, b, a))
 
         self.tk_image = ImageTk.PhotoImage(self.transparent_image)
-        image_width, image_height = self.transparent_image.size
 
-        height = image_height
-        width = image_width
+        width, height = self.transparent_image.size
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        self.geometry(f'+{x}+{y}')
 
-        x = (self.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.winfo_screenheight() // 2) - (height // 2)
-        self.geometry(f"{width}x{height}+{x}+{y}")
         self.overrideredirect(1)
         self.canvas = tk.Canvas(self, bg='white', bd=0, highlightthickness=0, width=width, height=height)
         self.canvas.pack()
@@ -44,9 +42,12 @@ class App(customtkinter.CTk):
 
         self.withdraw()
 
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
         # Create a splash screen
-        self.splash = SplashScreen(self)  # Provide width and height parameters
-        self.splash.after(5000, self.show_main_window)  # Schedule the splash screen to be destroyed after 5 seconds
+        self.splash = SplashScreen(self, screen_width, screen_height)
+        self.splash.after(5000, self.show_main_window)
         
 
     def show_main_window(self):
@@ -59,12 +60,12 @@ class App(customtkinter.CTk):
         # Destroy the splash screen and show the main window
         self.splash.destroy()
         self.title("PenToolBox by KGB")
-        w = self.winfo_screenwidth() // 2 - 1860 // 2
-        h = self.winfo_screenheight() // 2 - 940 // 2
-        self.geometry('%dx%d+%d+%d' % (1860, 940, w, h))
-        self.minsize(1860, 940)
-        self.maxsize(1860, 940)
-        self.resizable(False, False)
+        w = self.winfo_screenwidth() // 2 - 1280 // 2
+        h = self.winfo_screenheight() // 2 - 720 // 2
+        self.geometry('%dx%d+%d+%d' % (1280, 720, w, h))
+        #self.minsize(1860, 940)
+        #self.maxsize(1860, 940)
+        self.resizable(True, True)
         self.iconbitmap("img/logo/logo.ico")
 
         # configure grid layout (4x4)
