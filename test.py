@@ -3,7 +3,7 @@ import customtkinter
 from PIL import Image, ImageTk
 
 class SplashScreen(tk.Toplevel):
-    def __init__(self, parent, screen_width, screen_height):
+    def __init__(self, parent):
         super().__init__(parent)
         self.original_image = Image.open("img/splash/splash_transparency.png")
         self.transparency_color = (0, 0, 0)  # Red color RGB values
@@ -20,12 +20,11 @@ class SplashScreen(tk.Toplevel):
                 self.transparent_image.putpixel((x, y), (r, g, b, a))
 
         self.tk_image = ImageTk.PhotoImage(self.transparent_image)
-
         width, height = self.transparent_image.size
-        x = (screen_width // 2) - (width // 2)
-        y = (screen_height // 2) - (height // 2)
+        x = (self.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.winfo_screenheight() // 2) - (height // 2)
         self.geometry(f'+{x}+{y}')
-
+        
         self.overrideredirect(1)
         self.canvas = tk.Canvas(self, bg='white', bd=0, highlightthickness=0, width=width, height=height)
         self.canvas.pack()
@@ -42,12 +41,9 @@ class App(customtkinter.CTk):
 
         self.withdraw()
 
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-
         # Create a splash screen
-        self.splash = SplashScreen(self, screen_width, screen_height)
-        self.splash.after(5000, self.show_main_window)
+        self.splash = SplashScreen(self)  # Provide width and height parameters
+        self.splash.after(5000, self.show_main_window)  # Schedule the splash screen to be destroyed after 5 seconds
         
 
     def show_main_window(self):
@@ -63,7 +59,7 @@ class App(customtkinter.CTk):
         w = self.winfo_screenwidth() // 2 - 1280 // 2
         h = self.winfo_screenheight() // 2 - 720 // 2
         self.geometry('%dx%d+%d+%d' % (1280, 720, w, h))
-        #self.minsize(1860, 940)
+        self.minsize(1280, 720)
         #self.maxsize(1860, 940)
         self.resizable(True, True)
         self.iconbitmap("img/logo/logo.ico")
@@ -87,7 +83,7 @@ class App(customtkinter.CTk):
 
         self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Accueil")
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Reconnaissance")
+        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_guide, text="Reconnaissance")
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
         self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Scanning")
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
@@ -157,6 +153,14 @@ class App(customtkinter.CTk):
 
     def sidebar_button_event(self):
         print("sidebar_button click")
+
+    # test par rapport au grid via le bouton
+    def sidebar_button_guide(self):
+        # Test apparition d'une grid sur un autre
+        self.textbox2 = customtkinter.CTkTextbox(self, width=250, height=150, state="normal")
+        self.textbox2.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.textbox2.insert("0.0", "Guide d'utilisation\n\n" + "Test réussi si cela apparait.\n\n")
+        self.textbox2.configure(state="disabled")
 
 
 if __name__ == "__main__":
