@@ -2,38 +2,7 @@ import tkinter as tk
 import customtkinter
 from PIL import Image, ImageTk
 
-class SplashScreen(tk.Toplevel):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.original_image = Image.open("img/splash/splash_transparency.png")
-        self.transparency_color = (0, 0, 0)  # Red color RGB values
-        self.image_rgba = self.original_image.convert("RGBA")
-        self.transparent_image = Image.new("RGBA", self.image_rgba.size, (255, 255, 255, 0))
-
-        for x in range(self.image_rgba.width):
-            for y in range(self.image_rgba.height):
-                r, g, b, a = self.image_rgba.getpixel((x, y))
-                
-                if (r, g, b) == self.transparency_color:
-                    a = 0
-                
-                self.transparent_image.putpixel((x, y), (r, g, b, a))
-
-        self.tk_image = ImageTk.PhotoImage(self.transparent_image)
-        width, height = self.transparent_image.size
-        x = (self.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.winfo_screenheight() // 2) - (height // 2)
-        self.geometry(f'+{x}+{y}')
-        
-        self.overrideredirect(1)
-        self.canvas = tk.Canvas(self, bg='white', bd=0, highlightthickness=0, width=width, height=height)
-        self.canvas.pack()
-        self.lift()
-        self.wm_attributes("-disabled", True)
-        self.wm_attributes("-transparentcolor", "white")
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.tk_image)
-
-
+from main.splash.splash import SplashScreen
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -81,9 +50,9 @@ class App(customtkinter.CTk):
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="", image=htblogo, corner_radius=0)
         self.logo_label.grid(row=0, column=0, padx=20, pady=10)
 
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Accueil")
+        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_accueil, text="Accueil")
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_guide, text="Reconnaissance")
+        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_reconnaissance, text="Reconnaissance")
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
         self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Scanning")
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
@@ -154,9 +123,24 @@ class App(customtkinter.CTk):
     def sidebar_button_event(self):
         print("sidebar_button click")
 
+
     # test par rapport au grid via le bouton
-    def sidebar_button_guide(self):
-        # Test apparition d'une grid sur un autre
+    def sidebar_button_accueil(self):
+        self.textbox = customtkinter.CTkTextbox(self, width=250, height=150, state="normal")
+        self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.textbox.insert("0.0", "Pen Tool Box\n\n" + "Conditions d'utilisation.\n\n" + 
+                            "Cet outil de pentest est destiné à être utilisé uniquement à des fins légales et éthiques.\n\n" + 
+                            "En utilisant cet outil, vous acceptez de vous conformer aux lois en vigueur dans votre pays et de respecter les principes éthiques de la sécurité informatique.\n\n" + 
+                            "Vous ne devez en aucun cas utiliser cet outil pour effectuer des activités malveillantes, illégales ou non autorisées.\n\n" +
+                            "Ces activités incluent l'accès non autorisé à des systèmes informatiques, la perturbation des services en ligne, le vol d'informations confidentielles ou toute autre action susceptible de causer un préjudice.\n\n" +
+                            "L'utilisation de cet outil sur des systèmes informatiques sans l'autorisation expresse et écrite du propriétaire est strictement interdite.\n\n" + 
+                            "Il est de votre responsabilité de vous assurer que vous avez le consentement approprié avant de tester la sécurité d'un système.\n\n" + 
+                            "En aucun cas, les développeurs de cet outil ne peuvent être tenus responsables de toute utilisation abusive ou illégale de celui-ci.\n\n" + 
+                            "Tout usage contraire à ces conditions constitue une violation des droits d'auteur et peut entraîner des poursuites judiciaires.\n\n" + 
+                            "En utilisant cet outil, vous reconnaissez avoir lu, compris et accepté ces conditions d'utilisation. Si vous n'acceptez pas ces conditions, vous ne devez pas utiliser cet outil.")
+        self.textbox.configure(state="disabled")
+
+    def sidebar_button_reconnaissance(self):
         self.textbox2 = customtkinter.CTkTextbox(self, width=250, height=150, state="normal")
         self.textbox2.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
         self.textbox2.insert("0.0", "Guide d'utilisation\n\n" + "Test réussi si cela apparait.\n\n")
