@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import *
 import customtkinter
 from PIL import Image, ImageTk
 
@@ -41,6 +42,21 @@ class App(customtkinter.CTk):
 
         left_sidebar_instance = leftsidebar(self)
 
+        self.left_sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
+        self.left_sidebar_frame.grid(row=0, column=2, rowspan=4, sticky="nsew")
+        self.left_sidebar_frame.grid_rowconfigure(7, weight=1)
+
+        self.middle_frame = customtkinter.CTkFrame(self, width=300, corner_radius=0)
+        self.middle_frame.grid(row=1, column=1, rowspan=4, sticky="nsew")
+        self.middle_frame.grid_rowconfigure(7, weight=1)
+
+        self.textboxtest = customtkinter.CTkTextbox(self.middle_frame, width=250, height=50, state="normal")
+        self.textboxtest.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.textboxtest.insert("0.0", "Guide d'utilisation\n\n" + "Test réussi si cela apparait.\n\n")
+        self.textboxtest.configure(state="disabled")
+
+        self.testbutton = customtkinter.CTkButton(self.middle_frame, text="TEST")
+        self.testbutton.grid(row=0, column=0, padx=20, pady=10)
 
         # create main entry and button
         '''
@@ -71,7 +87,7 @@ class App(customtkinter.CTk):
         #self.seg_button_1.set("Value 2")
 
         # Barre de progression
-        self.progressbar_1 = customtkinter.CTkProgressBar(self)
+        self.progressbar_1 = customtkinter.CTkProgressBar(self, progress_color="green")
         self.progressbar_1.grid(row=3, column=1, padx=(20, 10), pady=(10, 10), sticky="ew")
         self.progressbar_1.configure(mode="determinate")
         self.progressbar_1.set(0.2)
