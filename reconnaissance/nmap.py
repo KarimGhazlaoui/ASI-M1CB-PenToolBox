@@ -1,5 +1,7 @@
 import subprocess
 
+class Nmap:
+
 def run_cmd(command):
     try:
         output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)

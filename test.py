@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 
 from main.splash.splash import SplashScreen
 from main.sidebar.left_sidebar import leftsidebar
+from main.reconnaissance.nmap import Nmap
 
 class App(customtkinter.CTk):
     def __init__(self):
