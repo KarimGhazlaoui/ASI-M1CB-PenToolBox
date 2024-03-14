@@ -2,11 +2,10 @@ import tkinter as tk
 from tkinter import *
 import customtkinter
 from PIL import Image, ImageTk
-from CTkTable import *
 
 from main.splash.splash import SplashScreen
 from main.sidebar.left_sidebar import leftsidebar
-import main.reconnaissance.nmap as nmap
+from scanning.scanning import NmapScannerApp
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -41,33 +40,15 @@ class App(customtkinter.CTk):
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure((2, 3), weight=0)
         self.grid_rowconfigure((0, 1, 2), weight=1)
-
-        left_sidebar_instance = leftsidebar(self)
-
-        self.left_sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
-        self.left_sidebar_frame.grid(row=0, column=2, rowspan=4, sticky="nsew")
-        self.left_sidebar_frame.grid_rowconfigure(7, weight=1)
-
-        self.middle_frame = customtkinter.CTkFrame(self, width=300, corner_radius=0)
-        self.middle_frame.grid(row=1, column=1, rowspan=4, sticky="nsew")
-        self.middle_frame.grid_rowconfigure(7, weight=1)
-
-        self.textboxtest = customtkinter.CTkTextbox(self.middle_frame, width=250, height=50, state="normal")
-        self.textboxtest.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
-        self.textboxtest.insert("0.0", "Guide d'utilisation\n\n" + "Test réussi si cela apparait.\n\n")
-        self.textboxtest.configure(state="disabled")
-
-        self.testbutton = customtkinter.CTkButton(self.middle_frame, command=self.scan_button, text="TEST")
-        self.testbutton.grid(row=0, column=0, padx=20, pady=10)
+        
+        # Appel de la sidebar gauche
+        leftsidebar(self)
+        NmapScannerApp(self)
 
         # create tabview
-        self.tabview = customtkinter.CTkTabview(self, width=250)
-        self.tabview.grid(row=0, column=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
-        self.tabview.add("CTkTabview")
-        self.tabview.add("Tab 2")
-        self.tabview.add("Tab 3")
-        self.tabview.tab("CTkTabview").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
-        self.tabview.tab("Tab 2").grid_columnconfigure(0, weight=1)
+        NmapScannerApp(self)
+
+        '''
 
         self.optionmenu_1 = customtkinter.CTkOptionMenu(self.tabview.tab("CTkTabview"), dynamic_resizing=False,
                                                         values=["Value 1", "Value 2", "Value Long Long Long"])
@@ -80,6 +61,7 @@ class App(customtkinter.CTk):
         self.string_input_button.grid(row=2, column=0, padx=20, pady=(10, 10))
         self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Tab 2"), text="CTkLabel on Tab 2")
         self.label_tab_2.grid(row=0, column=0, padx=20, pady=20)
+        '''
 
         # create main entry and button
         '''
@@ -111,49 +93,14 @@ class App(customtkinter.CTk):
         #self.seg_button_1.set("Value 2")
 
         # Barre de progression
-        self.progressbar_1 = customtkinter.CTkProgressBar(self, progress_color="green")
-        self.progressbar_1.grid(row=3, column=1, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.progressbar_1.configure(mode="determinate")
-        self.progressbar_1.set(0.2)
+        #self.progressbar_1 = customtkinter.CTkProgressBar(self, progress_color="green")
+        #self.progressbar_1.grid(row=3, column=1, padx=(20, 10), pady=(10, 10), sticky="ew")
+        #self.progressbar_1.configure(mode="determinate")
+        #self.progressbar_1.set(0.2)
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
         print("CTkInputDialog:", dialog.get_input())
-
-
-    # Test intégration NMAP
-    def scan_button(self, target=None):
-
-        if target is None:
-            target_network = nmap.get_network_interface_info()
-            target_network = target_network[0]+ "/" + target_network[1]
-            result = nmap.scan(target_network)
-            hosts_info = nmap.process_result(result)
-
-        else:
-            #command = '-sn 192.168.1.0-253'  # Construct the command string
-            result = nmap.scan(target)  # Run the Nmap scan
-            hosts_info = nmap.process_result(result)  # Process the scan result
-
-        formatted_result = ""
-        for host, info in hosts_info.items():
-            formatted_result += f"Host: {host}\n"
-            for key, value in info.items():
-                formatted_result += f"{key}: {value}\n"
-            formatted_result += "\n"
-
-        '''# Display the formatted result in a textbox
-
-        # Display the formatted result in a textbox
-        self.textbox = customtkinter.CTkTextbox(self, width=250, height=150, state="normal")
-        self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
-        self.textbox.insert("0.0", formatted_result)
-        self.textbox.configure(state="disabled")
-        '''
-
-        result_table = CTkTable(self.middle_frame, rows=5, columns=5, values=hosts_info)
-        result_table.pack(expand=True, fill="both", padx=20, pady=20)
-
 
 
 if __name__ == "__main__":
