@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Qemu
+*.qcow2
+
 # VSCode
 .vscode/*
 !.vscode/settings.json

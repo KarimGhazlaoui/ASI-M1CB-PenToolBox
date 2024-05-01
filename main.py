@@ -1,58 +1,68 @@
-import tkinter as tk
-from tkinter import *
-import customtkinter
-from PIL import Image, ImageTk
+# coding:utf-8
+import sys
 
-from main.splash.splash import SplashScreen
-from main.sidebar.left_sidebar import leftsidebar
-from scanning.scanning import NmapScannerApp
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QWidget
 
-class App(customtkinter.CTk):
-    def __init__(self):
-        super().__init__()
+from qfluentwidgets import SplitFluentWindow, FluentIcon
 
-        self.withdraw()
+from app.interface.scan_interface import ScanInterface
+from app.interface.engagement_interface import EngagementInterface
+from app.interface.cible_interface import CibleInterface
+from app.interface.qemu_interface import QemuInterface
 
-        # Create a splash screen
-        self.splash = SplashScreen(self)  # Provide width and height parameters
-        self.splash.after(5000, self.show_main_window)  # Schedule the splash screen to be destroyed after 5 seconds
+from app.scripts.qemu_script import QemuManager
+
+from app.engagement import CustomMessageBox
+
+from app.automatisation import scan_vers_cible
+
+import app.resource.resource_rc
+
+class main(SplitFluentWindow):
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        #CustomMessageBox(self)
+
+        #QemuManager.start_qemu(self)
+
+        self.resize(1416, 858)
+        self.setWindowTitle("KGB - PenToolBox")
+        self.setWindowIcon(QIcon(':/images/logo.png'))
+
+        self.scanInterface = ScanInterface(self)
+        #self.engagementInterface = EngagementInterface(self)
+        self.cibleInterface = CibleInterface(self)
+        self.qemuInterface = QemuInterface(self)
+
+        #self.addSubInterface(self.engagementInterface, QIcon(":/images/agreement.png"), 'Interactions Pré-engagement')
+        self.addSubInterface(self.scanInterface, QIcon(":/images/scaninterfaceicon.png"), 'Scan - Reconnaissance')
+        self.addSubInterface(self.cibleInterface, QIcon(":/images/cible.png"), 'Scan - Cibles Détectées')
+
+        self.addSubInterface(self.qemuInterface, QIcon(":/images/kali.png"), 'Kali - Control Center')
+
+        self.scanInterface.lancementscan.clicked.connect(self.lancer_scan)
+
         
 
-    def show_main_window(self):
-
-        customtkinter.set_appearance_mode("Dark")
-        customtkinter.set_default_color_theme("blue")
-
-        self.deiconify()
-
-        # Destroy the splash screen and show the main window
-        self.splash.destroy()
-        self.title("PenToolBox by KGB")
-        w = self.winfo_screenwidth() // 2 - 1280 // 2
-        h = self.winfo_screenheight() // 2 - 720 // 2
-        self.geometry('%dx%d+%d+%d' % (1280, 720, w, h))
-        self.minsize(1280, 720)
-        #self.maxsize(1860, 940)
-        self.resizable(True, True)
-        self.iconbitmap("img/logo/logo.ico")
-
-        # configure grid layout (4x4)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure((2, 3), weight=0)
-        self.grid_rowconfigure((0, 1, 2), weight=1)
+        #self.cibleInterface.cibletable()
         
-        # Appel de la sidebar gauche
-        leftsidebar(self)
-        NmapScannerApp(self)
+    def lancer_scan(self):
+        print("lancement scan")
+        scan = scan_vers_cible()
+        cibles = scan.lancement_scan(sousreseau=self.scanInterface.sousreseau.text(), optionscan=1)
+        print("lancer_scan value :" + str(cibles))
+        self.cibleInterface.cibletable(scan_results=cibles)
 
-        # create tabview
-        NmapScannerApp(self)
+if __name__ == '__main__':
+    QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
-    def open_input_dialog_event(self):
-        dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
-        print("CTkInputDialog:", dialog.get_input())
-
-
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+    app = QApplication(sys.argv)
+    w = main()
+    w.show()
+    app.exec_()
