@@ -44,33 +44,15 @@ class QemuManager:
         # Print the output
         print(stdout.read().decode())
 
-        '''
-        # Attend que l'heure et la date soit bien pris en compte par Kali
-        time.sleep(5)
-
-        # Démarre GVM via SSH
-        stdin, stdout, stderr = ssh.exec_command('sudo gvm-start')
-
-        # Print the output
-        print(stdout.read().decode())
-
-        # Execute nmap command inside QEMU via SSH
-        stdin, stdout, stderr = ssh.exec_command('nmap -T5 -sn 192.168.1.0/24')
-
-        # Print the output
-        print(stdout.read().decode())
-        '''
-
         # Close SSH connection
         self.ssh.close()
 
         # Wait for user input before terminating QEMU
         #input("Press Enter to terminate QEMU...")
 
-        # Terminate QEMU process
-        #qemu_process.terminate()
-
-import paramiko
+    def terminate_qemu(self):
+        #Terminate QEMU process
+        self.qemu_process.terminate()
 
 class QemuSSHManager:
     def __init__(self):

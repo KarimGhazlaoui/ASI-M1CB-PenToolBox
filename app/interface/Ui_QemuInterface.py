@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\GitHub\ASI-M1CB-PenToolBox-Interface\app\interface\ui\QemuInterface.ui'
+# Form implementation generated from reading ui file 'c:\GitHub\ASI-M1CB-PenToolBox\app\interface\ui\QemuInterface.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
