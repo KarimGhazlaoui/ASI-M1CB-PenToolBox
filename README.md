@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./img/logo/logo_large_bm.png">
+  <img src="./app/resource/images/logo.png">
 </p>
 
 # PenToolBox
