@@ -31,7 +31,7 @@ class main(SplitFluentWindow):
         self.qemu_manager = QemuManager()
         self.qemu_manager.start_qemu()
 
-        self.resize(1416, 900)
+        self.resize(1767, 1083)
         self.setWindowTitle("KGB - PenToolBox")
         self.setWindowIcon(QIcon(':/images/logo.png'))
 
