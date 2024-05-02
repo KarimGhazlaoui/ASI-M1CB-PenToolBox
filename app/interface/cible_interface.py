@@ -10,6 +10,7 @@ class CibleInterface(QWidget, Ui_CibleInterface):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
+        self.table = self.cibledetecte
 
     def cibletable(self, parent=None, scan_results=None):
 
@@ -21,21 +22,33 @@ class CibleInterface(QWidget, Ui_CibleInterface):
             print(scan_results)
             print("cibletable en cours")
 
-            table = self.cibledetecte
-            table.setBorderVisible(True)
-            table.setBorderRadius(8)
+            self.table.setBorderVisible(True)
+            self.table.setBorderRadius(8)
 
-            table.setWordWrap(True)
-            table.setRowCount(len(scan_results))
-            table.setColumnCount(2)
+            self.table.setWordWrap(True)
+            self.table.setRowCount(len(scan_results))
+            self.table.setColumnCount(2)
 
 
             # Add table data
 
             for i, cible in enumerate(scan_results):
                 for j in range(2):
-                    table.setItem(i, j, QTableWidgetItem(cible[j]))
+                    self.table.setItem(i, j, QTableWidgetItem(cible[j]))
 
             # Set horizontal header and hide vertical header
-            table.setHorizontalHeaderLabels(['IP', 'Status'])
-            table.verticalHeader().hide()
+            self.table.setHorizontalHeaderLabels(['IP', 'Status'])
+            self.table.verticalHeader().hide()
+    
+    def printTableContents(self):
+        selectedRows = self.table.selectedItems()
+        if len(selectedRows) == 0:  # If no row selected, print every first column
+            for row in range(self.table.rowCount()):
+                item = self.table.item(row, 0)  # Accessing only the first column
+                print(item.text())
+        else:  # If row(s) selected, print only selected row(s) first column
+            selectedRowsSet = set([item.row() for item in selectedRows])
+            for row in selectedRowsSet:
+                item = self.table.item(row, 0)  # Accessing only the first column
+                print(item.text())
+

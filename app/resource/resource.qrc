@@ -1,7 +1,9 @@
 <RCC>
   <qresource>
+    <file>images/strikeicon.png</file>
     <file>images/scanvulnerabilite.png</file>
     <file>images/cible.png</file>
+    <file>images/strike.png</file>
     <file>images/agreement.png</file>
     <file>images/settings.png</file>
     <file>images/target.png</file>

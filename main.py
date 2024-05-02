@@ -10,6 +10,7 @@ from qfluentwidgets import SplitFluentWindow, FluentIcon
 from app.interface.scan_interface import ScanInterface
 from app.interface.engagement_interface import EngagementInterface
 from app.interface.cible_interface import CibleInterface
+from app.interface.vulnerabilite_interface import VulnerabiliteInterface
 from app.interface.qemu_interface import QemuInterface
 
 from app.scripts.qemu_script import QemuManager
@@ -38,15 +39,18 @@ class main(SplitFluentWindow):
         self.scanInterface = ScanInterface(self)
         #self.engagementInterface = EngagementInterface(self)
         self.cibleInterface = CibleInterface(self)
+        self.vulnerabiliteInterface = VulnerabiliteInterface(self)
         self.qemuInterface = QemuInterface(self)
 
         #self.addSubInterface(self.engagementInterface, QIcon(":/images/agreement.png"), 'Interactions Pré-engagement')
         self.addSubInterface(self.scanInterface, QIcon(":/images/scaninterfaceicon.png"), 'Scan - Reconnaissance')
         self.addSubInterface(self.cibleInterface, QIcon(":/images/cible.png"), 'Scan - Cibles Détectées')
+        self.addSubInterface(self.vulnerabiliteInterface, QIcon(":/images/strike.png"), 'Exploitation - Vulnérabilitées')
 
         self.addSubInterface(self.qemuInterface, QIcon(":/images/kali.png"), 'Kali - Control Center')
 
         self.scanInterface.lancementscan.clicked.connect(self.lancer_scan)
+        self.cibleInterface.scanvulnerabilite.clicked.connect(self.printtable)
 
         
 
@@ -58,6 +62,9 @@ class main(SplitFluentWindow):
         cibles = scan.lancement_scan(sousreseau=self.scanInterface.sousreseau.text(), optionscan=1)
         print("lancer_scan value :" + str(cibles))
         self.cibleInterface.cibletable(scan_results=cibles)
+
+    def printtable(self):
+        self.cibleInterface.printTableContents()
 
     def closeEvent(self, event):
         # Handle the close event
