@@ -36,20 +36,16 @@ git clone https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox.git
 cd ASI-M1CB-PenToolBox
 ```
 3. Assurez-vous d'avoir les dépendances requises installées.
-   ```console
+```console
 pip install -r requirements.txt
 ```
 4. Télécharger kali.qcow2 et déplacer le dans le répertoire \app\qemu\kali
-[Cliquer ici pour télécharger kali.qcow2](https://drive.google.com/file/d/1VP1MUOJtDXOZRZ7zv1BVgJsDXaBzgdfI/view?usp=sharing)<br>
-
-5. Une fois téléchargé, déplacez-le dans le dossier : \app\qemu\kali.
-
+   
+     [Cliquer ici pour télécharger kali.qcow2](https://drive.google.com/file/d/1VP1MUOJtDXOZRZ7zv1BVgJsDXaBzgdfI/view?usp=sharing)<br>
 6. Lancez l'application en exécutant le script principal.
 ```console
 python main.py
 ```
-
-Ces commandes vont récupérer votre dépôt depuis GitHub et installer les dépendances requises pour exécuter votre application PenToolBox.
 
 ## Contribution
 Les contributions sont les bienvenues ! Si vous souhaitez contribuer à ce projet, n'hésitez pas à ouvrir une issue pour discuter des changements que vous souhaitez apporter.
