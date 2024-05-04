@@ -33,8 +33,7 @@ Pour installer l'outil, suivez ces étapes :
 ```console
 git clone https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox.git
 cd ASI-M1CB-PenToolBox
-pip install pillow
-pip install customtkinter
+pip install -r requirements.txt
 ```
 
 3. Lancez l'application en exécutant le script principal.
