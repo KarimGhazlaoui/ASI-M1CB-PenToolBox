@@ -31,21 +31,20 @@ Par conséquent, il n'est pas compilé et nécessite d'être lancé via Python e
 Pour installer l'outil, suivez ces étapes :
 
 1. Clonez ce dépôt sur votre machine locale.
-2. Assurez-vous d'avoir les dépendances requises installées.
-3. D'avoir mis kali.qcow2 dans le répertoire \app\qemu\kali
-
-***Clonage et installation des dépendances :***
-```console
+   ```console
 git clone https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox.git
 cd ASI-M1CB-PenToolBox
+```
+3. Assurez-vous d'avoir les dépendances requises installées.
+   ```console
 pip install -r requirements.txt
 ```
+4. Télécharger kali.qcow2 et déplacer le dans le répertoire \app\qemu\kali
+[Cliquer ici pour télécharger kali.qcow2](https://drive.google.com/file/d/1VP1MUOJtDXOZRZ7zv1BVgJsDXaBzgdfI/view?usp=sharing)<br>
 
-***Téléchargement de Kali***
+5. Une fois téléchargé, déplacez-le dans le dossier : \app\qemu\kali.
 
-[**Cliquer ici pour télécharger kali.qcow2**](https://drive.google.com/file/d/1VP1MUOJtDXOZRZ7zv1BVgJsDXaBzgdfI/view?usp=sharing)<br> Une fois téléchargé, déplacez-le dans le dossier : \app\qemu\kali.
-
-3. Lancez l'application en exécutant le script principal.
+6. Lancez l'application en exécutant le script principal.
 ```console
 python main.py
 ```
