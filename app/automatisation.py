@@ -89,7 +89,7 @@ class scan_vers_cible:
 
         gvm_reponse = ""
 
-        command_to_execute = f"""gvm-cli socket --xml "<create_task><name>{datetime_cible}</name> <target id=\\"{id_cible}\\"></target><config id=\\"4be0e123-e2bc-424d-a84e-bc842414aa61\\"></config></create_task>" --pretty"""
+        command_to_execute = f"""gvm-cli socket --xml "<create_task><name>{datetime_cible}</name> <target id=\\"{id_cible}\\"></target><config id=\\"daba56c8-73ec-11df-a475-002264764cea\\"></config></create_task>" --pretty"""
         print(command_to_execute)
         print("Création de la tâche GVM..")
         for line in ssh_manager.execute_command_live(command_to_execute):
