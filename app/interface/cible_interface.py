@@ -40,15 +40,18 @@ class CibleInterface(QWidget, Ui_CibleInterface):
             self.table.setHorizontalHeaderLabels(['IP', 'Status'])
             self.table.verticalHeader().hide()
     
-    def printTableContents(self):
+    def TableContents(self):
+        table_adresse = []
         selectedRows = self.table.selectedItems()
         if len(selectedRows) == 0:  # If no row selected, print every first column
             for row in range(self.table.rowCount()):
                 item = self.table.item(row, 0)  # Accessing only the first column
-                print(item.text())
+                table_adresse.append(item.text())
+            return table_adresse
         else:  # If row(s) selected, print only selected row(s) first column
             selectedRowsSet = set([item.row() for item in selectedRows])
             for row in selectedRowsSet:
                 item = self.table.item(row, 0)  # Accessing only the first column
-                print(item.text())
+                table_adresse.append(item.text())
+            return table_adresse
 

@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
 
-from qfluentwidgets import SplitFluentWindow, FluentIcon
+from qfluentwidgets import SplitFluentWindow, FluentIcon, Flyout, InfoBarIcon, FlyoutAnimationType, MessageBox
 
 from app.interface.scan_interface import ScanInterface
 from app.interface.engagement_interface import EngagementInterface
@@ -23,6 +23,8 @@ from app.scripts.qemu_script import QemuManager
 import app.resource.resource_rc
 
 class main(SplitFluentWindow):
+
+    automatisation = scan_vers_cible()
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -50,21 +52,29 @@ class main(SplitFluentWindow):
         self.addSubInterface(self.qemuInterface, QIcon(":/images/kali.png"), 'Kali - Control Center')
 
         self.scanInterface.lancementscan.clicked.connect(self.lancer_scan)
-        self.cibleInterface.scanvulnerabilite.clicked.connect(self.printtable)
+        self.cibleInterface.scanvulnerabilite.clicked.connect(self.vers_vulnerabilite_scan)
 
         
 
         #self.cibleInterface.cibletable()
         
     def lancer_scan(self):
-        print("lancement scan")
-        scan = scan_vers_cible()
-        cibles = scan.lancement_scan(sousreseau=self.scanInterface.sousreseau.text(), optionscan=1)
+        print("lancement du scan")
+        cibles = self.automatisation.lancement_scan(sousreseau=self.scanInterface.sousreseau.text(), optionscan=1)
         print("lancer_scan value :" + str(cibles))
         self.cibleInterface.cibletable(scan_results=cibles)
+        SplitFluentWindow.switchTo(self, interface=self.cibleInterface)
+
+    def vers_vulnerabilite_scan(self):
+        cible_table = self.cibleInterface.TableContents()
+        vulnerabilite = self.automatisation.scan_vulnerabilite(cible_table)
+        print(vulnerabilite)
+        SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface)
 
     def printtable(self):
-        self.cibleInterface.printTableContents()
+        cible_table = self.cibleInterface.TableContents()
+        print(cible_table)
+
 
     def closeEvent(self, event):
         # Handle the close event
@@ -87,4 +97,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = main()
     w.show()
-    app.exec_()
+    sys.exit(app.exec_())
