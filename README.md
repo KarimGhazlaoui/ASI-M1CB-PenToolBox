@@ -31,7 +31,7 @@ Par conséquent, il n'est pas compilé et nécessite d'être lancé via Python e
 Pour installer l'outil, suivez ces étapes :
 
 1. Clonez ce dépôt sur votre machine locale.
-   ```console
+```console
 git clone https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox.git
 cd ASI-M1CB-PenToolBox
 ```
