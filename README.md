@@ -42,11 +42,8 @@ pip install -r requirements.txt
 ```
 
 ***Téléchargement de Kali***
-```console
-https://drive.google.com/file/d/1VP1MUOJtDXOZRZ7zv1BVgJsDXaBzgdfI/view?usp=sharing
 
-Une fois télécharger, le déplacer dans le dossier : \app\qemu\kali
-```
+[**Cliquer ici pour télécharger kali.qcow2**](https://drive.google.com/file/d/1VP1MUOJtDXOZRZ7zv1BVgJsDXaBzgdfI/view?usp=sharing)<br> Une fois téléchargé, déplacez-le dans le dossier : \app\qemu\kali.
 
 3. Lancez l'application en exécutant le script principal.
 ```console
