@@ -6,7 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
-# Qemu
+# PenToolBox
+*.kgb
 *.qcow2
 
 # VSCode
