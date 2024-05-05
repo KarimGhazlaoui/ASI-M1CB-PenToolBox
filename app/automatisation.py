@@ -66,7 +66,7 @@ class scan_vers_cible:
         cible_vulnerabilite = ','.join(cible_vulnerabilite)
         current_datetime = datetime.now()
         datetime_cible = current_datetime.strftime("%d/%m/%Y %H:%M:%S")
-        command_to_execute = f"""gvm-cli socket --xml "<create_target><name>{datetime_cible}</name><hosts>{cible_vulnerabilite}</hosts><port_list id=\\"4a4717fe-57d2-11e1-9a26-406186ea4fc5\\"/></create_target>" --pretty"""
+        command_to_execute = f"""gvm-cli socket --xml "<create_target><name>{datetime_cible}</name><hosts>{cible_vulnerabilite}</hosts><port_list id=\\"4a4717fe-57d2-11e1-9a26-406186ea4fc5\\"/><alive_tests>Consider Alive</alive_tests></create_target>" --pretty"""
         print(command_to_execute)
         completion_indicator = "command completed"
 
@@ -89,7 +89,7 @@ class scan_vers_cible:
 
         gvm_reponse = ""
 
-        command_to_execute = f"""gvm-cli socket --xml "<create_task><name>{datetime_cible}</name> <target id=\\"{id_cible}\\"></target><config id=\\"daba56c8-73ec-11df-a475-002264764cea\\"></config></create_task>" --pretty"""
+        command_to_execute = f"""gvm-cli socket --xml "<create_task><name>{datetime_cible}</name> <target id=\\"{id_cible}\\"></target><config id=\\"8715c877-47a0-438d-98a3-27c7a6ab2196\\"></config></create_task>" --pretty"""
         print(command_to_execute)
         print("Création de la tâche GVM..")
         for line in ssh_manager.execute_command_live(command_to_execute):
@@ -137,3 +137,5 @@ class scan_vers_cible:
         cidr = str(ipaddress.IPv4Network('0.0.0.0/' + subnet_mask).prefixlen)
 
         return ip_address, cidr
+    
+    

@@ -26,7 +26,7 @@ class QemuManager:
         self.qemu_process = subprocess.Popen(qemu_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         # Wait for QEMU to boot (you may need to adjust the sleep duration)
-        time.sleep(10)
+        time.sleep(5)
 
         # SSH connection parameters
         ssh_host = '127.0.0.1'  # Host where QEMU is running

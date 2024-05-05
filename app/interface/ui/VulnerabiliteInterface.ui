@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1033</width>
-    <height>938</height>
+    <width>921</width>
+    <height>858</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -21,7 +21,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="0,0,0">
+    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="0">
      <property name="leftMargin">
       <number>20</number>
      </property>
@@ -37,7 +37,81 @@
      <property name="spacing">
       <number>12</number>
      </property>
-     <item row="0" column="1">
+     <item row="2" column="0">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="StrongBodyLabel" name="StrongBodyLabel_2">
+           <property name="text">
+            <string>Tester les vulnérabilités disponibles ou sélectionner celles qui sont pertinentes pour une recherche ciblée, selon les besoins</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="PrimaryPushButton" name="scanvulnerabilite">
+           <property name="text">
+            <string>     Evaluations des vulnérabilités</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../resource/resource.qrc">
+             <normaloff>:/images/strikeicon.png</normaloff>:/images/strikeicon.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="hasIcon" stdset="0">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="topMargin">
         <number>10</number>
@@ -97,7 +171,7 @@
        </item>
       </layout>
      </item>
-     <item row="1" column="1">
+     <item row="1" column="0">
       <layout class="QGridLayout" name="gridLayout_2" rowstretch="0" columnstretch="0">
        <property name="topMargin">
         <number>0</number>
@@ -218,18 +292,13 @@
              <number>20</number>
             </property>
             <item>
-             <widget class="TreeWidget" name="vulnerabiliteliste">
+             <widget class="TableWidget" name="vulnerabilitetable">
               <property name="minimumSize">
                <size>
                 <width>700</width>
                 <height>500</height>
                </size>
               </property>
-              <column>
-               <property name="text">
-                <string notr="true">1</string>
-               </property>
-              </column>
              </widget>
             </item>
            </layout>
@@ -239,133 +308,7 @@
        </item>
       </layout>
      </item>
-     <item row="1" column="2">
-      <spacer name="horizontalSpacer_12">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="2" column="1">
-      <layout class="QGridLayout" name="gridLayout_3">
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item row="1" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="PrimaryPushButton" name="scanvulnerabilite">
-           <property name="text">
-            <string>     Evaluations des vulnérabilités</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../../resource/resource.qrc">
-             <normaloff>:/images/strikeicon.png</normaloff>:/images/strikeicon.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>30</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="hasIcon" stdset="0">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="StrongBodyLabel" name="StrongBodyLabel_2">
-           <property name="text">
-            <string>Tester les vulnérabilités disponibles ou sélectionner celles qui sont pertinentes pour une recherche ciblée, selon les besoins</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </item>
-     <item row="1" column="0">
-      <spacer name="horizontalSpacer_11">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
     </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
@@ -407,8 +350,8 @@
    <header>qfluentwidgets</header>
   </customwidget>
   <customwidget>
-   <class>TreeWidget</class>
-   <extends>QTreeWidget</extends>
+   <class>TableWidget</class>
+   <extends>QTableWidget</extends>
    <header>qfluentwidgets</header>
   </customwidget>
  </customwidgets>

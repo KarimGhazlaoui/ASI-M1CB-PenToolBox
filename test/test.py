@@ -1,4 +1,5 @@
 import csv
+import json
 
 def parse_csv_report(csv_data):
     scan_results = []
@@ -1455,4 +1456,13 @@ for result in scan_results:
     }
     formatted_results.append(formatted_result)
 
-print(formatted_results)
+# Load existing JSON data
+with open('Test.json', 'r') as json_file:
+    existing_data = json.load(json_file)
+
+# Add the new variable vulnerabilite_detecte
+existing_data['vulnerabilite_detecte'] = formatted_results
+
+# Write updated JSON data back to file
+with open('Test.json', 'w') as json_file:
+    json.dump(existing_data, json_file)
