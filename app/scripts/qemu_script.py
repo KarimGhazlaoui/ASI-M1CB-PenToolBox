@@ -63,15 +63,14 @@ class QemuSSHManager:
         self.password = 'root'
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.ssh.connect(hostname=self.host, port=self.port, username=self.username, password=self.password)
+        
 
     def execute_command_live(self, command):
+            self.ssh.connect(hostname=self.host, port=self.port, username=self.username, password=self.password)
             command_with_completion = f"{command} && echo 'command completed'"
             stdin, stdout, stderr = self.ssh.exec_command(command_with_completion)
             for line in stdout:
                 yield line.strip('\n')
                 if line.strip('\n') == 'command completed':
+                    self.close_connection()
                     break
-
-    def close_connection(self):
-        self.ssh.close()

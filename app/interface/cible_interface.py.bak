@@ -54,16 +54,4 @@ class CibleInterface(QWidget, Ui_CibleInterface):
                 item = self.table.item(row, 0)  # Accessing only the first column
                 table_adresse.append(item.text())
             return table_adresse
-        
-    def liveupdate(self, livedata):
-        actualdata = self.vulnerabilitelive.toPlainText()
-        if actualdata:
-            updatelive = actualdata + '\n' + livedata
-        else:
-            updatelive = livedata
-        updatelive = updatelive.replace("command completed", "")
-        self.vulnerabilitelive.setText(updatelive)
-
-    def liveprogress(self, progressdata):
-        pass
 

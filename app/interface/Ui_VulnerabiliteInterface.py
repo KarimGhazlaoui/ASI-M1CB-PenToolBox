@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_VulnerabiliteInterface(object):
     def setupUi(self, VulnerabiliteInterface):
         VulnerabiliteInterface.setObjectName("VulnerabiliteInterface")
-        VulnerabiliteInterface.resize(921, 858)
+        VulnerabiliteInterface.resize(1520, 1024)
         VulnerabiliteInterface.setMinimumSize(QtCore.QSize(804, 858))
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(VulnerabiliteInterface)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -136,7 +136,7 @@ class Ui_VulnerabiliteInterface(object):
     def retranslateUi(self, VulnerabiliteInterface):
         _translate = QtCore.QCoreApplication.translate
         VulnerabiliteInterface.setWindowTitle(_translate("VulnerabiliteInterface", "Form"))
-        self.StrongBodyLabel_2.setText(_translate("VulnerabiliteInterface", "Tester les vulnérabilités disponibles ou sélectionner celles qui sont pertinentes pour une recherche ciblée, selon les besoins"))
+        self.StrongBodyLabel_2.setText(_translate("VulnerabiliteInterface", "Après avoir vérifier les vulnérabilités, vous pouvez passer à la phase d\'évaluation des vulnérabilités"))
         self.scanvulnerabilite.setText(_translate("VulnerabiliteInterface", "     Evaluations des vulnérabilités"))
         self.StrongBodyLabel.setText(_translate("VulnerabiliteInterface", "Exploitation - Vulnérabilités Détectées"))
         self.TitleLabel.setText(_translate("VulnerabiliteInterface", "Liste des vulnérabilités potentielles détectées"))

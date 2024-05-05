@@ -16,7 +16,7 @@ from app.interface.qemu_interface import QemuInterface
 from app.scripts.qemu_script import QemuManager
 from app.engagement import CustomMessageBox
 from app.scripts.profile_script import Profile
-
+from app.scripts.gvm_script import gvm
 from app.automatisation import scan_vers_cible
 from app.scripts.qemu_script import QemuManager
 
@@ -25,10 +25,12 @@ import app.resource.resource_rc
 class main(SplitFluentWindow):
 
     automatisation = scan_vers_cible()
+    
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-
+        self.gvm_management = gvm(self)
+        
         #CustomMessageBox(self)
 
         # Localisation des profiles d'entreprises
@@ -150,13 +152,17 @@ class main(SplitFluentWindow):
 
     def vulnerabilite_scan(self):
         cible_table = self.cibleInterface.TableContents()
-        vulnerabilite = self.automatisation.scan_vulnerabilite(cible_table)
+        vulnerabilite = self.gvm_management.scan_vulnerabilite(cible_table)
         print(vulnerabilite)
         SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface)
 
     def printtable(self):
         cible_table = self.cibleInterface.TableContents()
         print(cible_table)
+
+
+    def liveupdate(self, livedata):
+        self.cibleInterface.liveupdate(livedata)
 
 
     def closeEvent(self, event):

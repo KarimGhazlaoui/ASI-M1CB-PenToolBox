@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_CibleInterface(object):
     def setupUi(self, CibleInterface):
         CibleInterface.setObjectName("CibleInterface")
-        CibleInterface.resize(1523, 1147)
+        CibleInterface.resize(804, 858)
         CibleInterface.setMinimumSize(QtCore.QSize(804, 858))
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(CibleInterface)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -143,6 +143,39 @@ class Ui_CibleInterface(object):
         self.horizontalLayout.addItem(spacerItem4)
         self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setContentsMargins(-1, -1, -1, 20)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_6.setContentsMargins(-1, -1, -1, 0)
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem5)
+        self.CaptionLabel = CaptionLabel(CibleInterface)
+        self.CaptionLabel.setObjectName("CaptionLabel")
+        self.horizontalLayout_6.addWidget(self.CaptionLabel)
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem6)
+        self.verticalLayout.addLayout(self.horizontalLayout_6)
+        self.vulnerabilitetablelive = TableWidget(CibleInterface)
+        self.vulnerabilitetablelive.setMinimumSize(QtCore.QSize(0, 0))
+        self.vulnerabilitetablelive.setObjectName("vulnerabilitetablelive")
+        self.vulnerabilitetablelive.setColumnCount(3)
+        self.vulnerabilitetablelive.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.vulnerabilitetablelive.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.vulnerabilitetablelive.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.vulnerabilitetablelive.setHorizontalHeaderItem(2, item)
+        self.vulnerabilitetablelive.horizontalHeader().setStretchLastSection(True)
+        self.verticalLayout.addWidget(self.vulnerabilitetablelive)
+        self.vulnerabilitelive = TextEdit(CibleInterface)
+        self.vulnerabilitelive.setMinimumSize(QtCore.QSize(0, 100))
+        self.vulnerabilitelive.setReadOnly(True)
+        self.vulnerabilitelive.setObjectName("vulnerabilitelive")
+        self.verticalLayout.addWidget(self.vulnerabilitelive)
+        self.verticalLayout_2.addLayout(self.verticalLayout)
 
         self.retranslateUi(CibleInterface)
         QtCore.QMetaObject.connectSlotsByName(CibleInterface)
@@ -155,5 +188,17 @@ class Ui_CibleInterface(object):
         self.StrongBodyLabel_2.setText(_translate("CibleInterface", "Vous pouvez scanner les vulnérabilités de toutes les cibles ou sélectionner seulement celles qui vous intéressent"))
         self.scanvulnerabilite.setText(_translate("CibleInterface", "   Scanner les vulnérabilités"))
         self.StrongBodyLabel.setText(_translate("CibleInterface", "Scan - Cibles Détectées"))
-from qfluentwidgets import CardWidget, HorizontalSeparator, IconWidget, PrimaryPushButton, StrongBodyLabel, TableWidget, TitleLabel
+        self.CaptionLabel.setText(_translate("CibleInterface", "Retrouvez les informations en live ci-dessous du processus de scan des vulnérabilités"))
+        item = self.vulnerabilitetablelive.horizontalHeaderItem(0)
+        item.setText(_translate("CibleInterface", "ID"))
+        item = self.vulnerabilitetablelive.horizontalHeaderItem(1)
+        item.setText(_translate("CibleInterface", "Status"))
+        item = self.vulnerabilitetablelive.horizontalHeaderItem(2)
+        item.setText(_translate("CibleInterface", "Pourcentage"))
+        self.vulnerabilitelive.setHtml(_translate("CibleInterface", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Segoe UI\',\'Microsoft YaHei\',\'PingFang SC\',\'MS Shell Dlg 2\'; font-size:14px; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+from qfluentwidgets import CaptionLabel, CardWidget, HorizontalSeparator, IconWidget, PrimaryPushButton, StrongBodyLabel, TableWidget, TextEdit, TitleLabel
 import app.resource.resource_rc
