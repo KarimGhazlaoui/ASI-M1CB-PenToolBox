@@ -88,6 +88,7 @@ class main(SplitFluentWindow):
         self.cibleInterface.scanvulnerabilite.clicked.connect(self.vulnerabilite_scan)
 
         self.evaluationInterface.passwordchecker.textChanged.connect(self.check_strength)
+        self.evaluationInterface.hydraexecution.clicked.connect(self.hydra_lancement)
 
         self.profiles_initialisation()
 
@@ -143,6 +144,22 @@ class main(SplitFluentWindow):
                 self.vulnerabiliteInterface.chargement_vulnerabilite(vulnerabilite_results=vulnerabilite_detecte)
             else:
                 self.vulnerabiliteInterface.clear_vulnerabilite()
+
+            # Chargement des cibles Hydra si disponible
+            cible_21 = set()
+            vulnerabilite_cible = self.profile_manager.load_variable(selected_profile, "vulnerabilite_detecte")
+
+            if vulnerabilite_cible is not None:
+                for item in vulnerabilite_cible:
+                    if item['Port'] == '21':
+                        cible_21.add(item['IP'])
+            else:
+                cible_21 = []
+            
+            hydra_cibles = list(cible_21)
+            self.evaluationInterface.hydracomboboxtarget.clear()
+            self.evaluationInterface.hydracomboboxtarget.addItems(hydra_cibles)
+
         else:
             print("Aucun profile sélectionné")
 
@@ -227,6 +244,9 @@ class main(SplitFluentWindow):
             self.evaluationInterface.complexitevisuel.setStyleSheet("background-color: green")
 
         self.evaluationInterface.complexitepassword.setText(f"Complexité du mot de passe : {strength}")
+
+    def hydra_lancement(self, hydra_cible):
+        pass
 
 
     def closeEvent(self, event):
