@@ -19,6 +19,7 @@ from app.scripts.qemu_script import QemuManager
 from app.engagement import CustomMessageBox
 from app.scripts.profile_script import Profile
 from app.scripts.gvm_script import gvm
+from app.scripts.rapport_script import rapport
 from app.automatisation import scan_vers_cible
 from app.scripts.qemu_script import QemuManager
 
@@ -55,6 +56,7 @@ class SSHWorker(QThread):
         self.username = username
         self.password = password
         self.command = command + ' && echo "command completed"'
+        self.output = ""  # Attribute to store command output
 
     def run(self):
         try:
@@ -63,14 +65,22 @@ class SSHWorker(QThread):
             client.connect(self.host, self.port, username=self.username, password=self.password)
             stdin, stdout, stderr = client.exec_command(self.command)
             for line in stdout:
-                self.update_signal.emit(line.strip())
-                if "command completed" in line:  # Check for completion indicator
-                    self.finished_signal.emit()
+                output_line = line.strip()
+                self.update_signal.emit(output_line)
+                self.output += output_line + "\n"  # Append output to the attribute
             for line in stderr:
-                self.update_signal.emit(line.strip())
+                output_line = line.strip()
+                self.update_signal.emit(output_line)
+                self.output += output_line + "\n"  # Append output to the attribute
+            while not stdout.channel.exit_status_ready():
+                pass
+            self.finished_signal.emit()
             client.close()
         except Exception as e:
-            self.update_signal.emit(f"Error: {str(e)}")
+            error_message = f"Error: {str(e)}"
+            self.update_signal.emit(error_message)
+            self.output += error_message + "\n"  # Append error message to the attribute
+
 
 class main(SplitFluentWindow):
 
@@ -277,13 +287,17 @@ class main(SplitFluentWindow):
         hydra_cible = self.evaluationInterface.hydracomboboxtarget.currentText()
         self.evaluationInterface.hydra_progressbar.setVisible(True)
 
-        command = f"cd passwords-and-usernames && hydra -l root -P xato-net-10-million-passwords-1000.txt {hydra_cible} ftp"
+        command = f"cd passwords-and-usernames && hydra -L top-usernames-shortlist.txt -P xato-net-10-million-passwords-10.txt {hydra_cible} ftp"
         self.worker = SSHWorker(command=command)
         self.worker.update_signal.connect(self.evaluationInterface.evaluationterminal.append)
         self.worker.finished_signal.connect(self.on_hydra_completion)  # Connect to slot for completion
         self.worker.start()
 
     def on_hydra_completion(self):
+        hydra_resultat = self.worker.output  # Access the output attribute
+        selected_profile = self.scanInterface.loadprofile.currentText()
+        self.profile_manager.add_or_update_variable(selected_profile, "hydra_resultat", hydra_resultat)
+        print("Hydra command output:", hydra_resultat)
         self.evaluationInterface.hydra_progressbar.setVisible(False)
 
 
