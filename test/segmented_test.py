@@ -1,48 +1,68 @@
-# coding:utf-8
 import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit
+from PyQt5.QtCore import QThread, pyqtSignal
+import paramiko
+import re
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QStackedWidget
+class HydraWorker(QThread):
+    update_signal = pyqtSignal(str)
 
-# Import the Ui_CibleInterface2 class directly from the UI file
-from app.interface.Ui_CibleInterface2 import Ui_CibleInterface2
+    def __init__(self, hostname, username, password, parent=None):
+        super().__init__(parent)
+        self.hostname = hostname
+        self.username = username
+        self.password = password
 
+    def run(self):
+        ssh_client = paramiko.SSHClient()
+        ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        try:
+            ssh_client.connect(self.hostname, port=60022, username=self.username, password=self.password)
+            shell = ssh_client.invoke_shell()
+            shell.send("hydra -L CommonAdminBase64.txt -P 2023-200_most_used_passwords.txt 192.168.1.29 ftp\n")
+            output = ""
+            while True:
+                if shell.recv_ready():
+                    output += shell.recv(1024).decode()
+                    self.update_signal.emit(output)
+                    if "command completed" in output:
+                        break
+            ssh_client.close()
+        except Exception as e:
+            self.update_signal.emit(str(e))
 
-class Demo(QWidget):
+class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.initUI()
 
-        # Create an instance of the UI class
-        self.ui = Ui_CibleInterface2()
-        # Set up the UI
-        self.ui.setupUi(self)
+    def initUI(self):
+        self.setWindowTitle("Hydra Monitor")
+        self.setGeometry(100, 100, 600, 400)
 
-        # Create a stacked widget to manage switching between interfaces
-        self.stackedWidget = QStackedWidget(self)
-        self.ui.verticalLayout.addWidget(self.stackedWidget)
+        layout = QVBoxLayout()
+        self.text_edit = QTextEdit()
+        self.text_edit.setReadOnly(True)
+        layout.addWidget(self.text_edit)
+        self.setLayout(layout)
 
-        # Add the interfaces to the stacked widget
-        self.stackedWidget.addWidget(self.ui.frame)  # Add the QTableWidget to the stacked widget
-        self.stackedWidget.addWidget(self.ui.reseauciblecard)
+    def update_text(self, text):
+        # Remove ANSI escape codes from the text
+        clean_text = re.sub(r'\x1b\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]', '', text)
+        self.text_edit.append(clean_text)
 
-        # Connect the pivot to switch to the QTableWidget when required
-        self.ui.Pivot.currentChanged.connect(self.onPivotCurrentChanged)
-
-        # Initially show the QTableWidget
-        self.ui.Pivot.setCurrentIndex(0)
-
-    def onPivotCurrentChanged(self, index):
-        # Switch to the corresponding interface based on the pivot index
-        self.stackedWidget.setCurrentIndex(index)
-
-
-if __name__ == '__main__':
-    # enable dpi scale
-    QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
-
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = Demo()
-    w.show()
+    window = MainWindow()
+    window.show()
+
+    # Replace these values with your SSH connection details
+    hostname = "127.0.0.1"
+    username = "kali"
+    password = "root"
+
+    hydra_worker = HydraWorker(hostname, username, password)
+    hydra_worker.update_signal.connect(window.update_text)
+    hydra_worker.start()
+
     sys.exit(app.exec_())

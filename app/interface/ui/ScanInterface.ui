@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>995</width>
-    <height>786</height>
+    <width>942</width>
+    <height>711</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -513,7 +513,6 @@
            <widget class="LineEdit" name="actualprofile">
             <property name="font">
              <font>
-              <pointsize>-1</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -945,10 +944,24 @@
         </item>
        </layout>
       </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
      <zorder>HorizontalSeparator_3</zorder>
      <zorder></zorder>
      <zorder>HorizontalSeparator</zorder>
+     <zorder>verticalSpacer_2</zorder>
     </widget>
    </item>
    <item row="4" column="0">

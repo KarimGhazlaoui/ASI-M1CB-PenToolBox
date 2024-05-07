@@ -1,5 +1,7 @@
 <RCC>
   <qresource>
+    <file>images/tests.png</file>
+    <file>images/vulnerabilite.png</file>
     <file>images/strikeicon.png</file>
     <file>images/scanvulnerabilite.png</file>
     <file>images/cible.png</file>

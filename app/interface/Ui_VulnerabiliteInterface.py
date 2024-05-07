@@ -56,7 +56,7 @@ class Ui_VulnerabiliteInterface(object):
         self.IconWidget_3.setMinimumSize(QtCore.QSize(50, 50))
         self.IconWidget_3.setMaximumSize(QtCore.QSize(50, 50))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/images/strike.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/vulnerabilite.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.IconWidget_3.setIcon(icon1)
         self.IconWidget_3.setObjectName("IconWidget_3")
         self.horizontalLayout.addWidget(self.IconWidget_3)

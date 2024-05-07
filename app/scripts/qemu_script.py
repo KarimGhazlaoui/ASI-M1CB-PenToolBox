@@ -45,6 +45,8 @@ class QemuManager:
         # Print the output
         print(stdout.read().decode())
 
+        stdin, stdout, stderr = self.ssh.exec_command('sudo chmod 662 /var/run/gvmd/gvmd.sock')
+
         # Close SSH connection
         self.ssh.close()
 

@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_ScanInterface(object):
     def setupUi(self, ScanInterface):
         ScanInterface.setObjectName("ScanInterface")
-        ScanInterface.resize(995, 786)
+        ScanInterface.resize(942, 711)
         ScanInterface.setMinimumSize(QtCore.QSize(942, 711))
         ScanInterface.setMaximumSize(QtCore.QSize(9999, 9999))
         self.gridLayout = QtWidgets.QGridLayout(ScanInterface)
@@ -182,7 +182,6 @@ class Ui_ScanInterface(object):
         self.gridLayout_2.addItem(spacerItem12, 1, 0, 1, 1)
         self.actualprofile = LineEdit(self.reseauciblecard_2)
         font = QtGui.QFont()
-        font.setPointSize(-1)
         font.setBold(True)
         font.setWeight(75)
         self.actualprofile.setFont(font)
@@ -334,11 +333,13 @@ class Ui_ScanInterface(object):
         spacerItem26 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem26)
         self.verticalLayout_8.addLayout(self.horizontalLayout_5)
+        spacerItem27 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_8.addItem(spacerItem27)
         self.HorizontalSeparator_3.raise_()
         self.HorizontalSeparator.raise_()
         self.gridLayout.addWidget(self.CardWidget, 2, 1, 1, 1)
-        spacerItem27 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem27, 4, 0, 1, 1)
+        spacerItem28 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem28, 4, 0, 1, 1)
 
         self.retranslateUi(ScanInterface)
         QtCore.QMetaObject.connectSlotsByName(ScanInterface)
