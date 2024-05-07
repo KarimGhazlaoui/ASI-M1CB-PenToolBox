@@ -142,6 +142,14 @@ class Ui_EvaluationInterface(object):
         spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem9)
         self.verticalLayout_2.addLayout(self.horizontalLayout_6)
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_4.setContentsMargins(-1, -1, -1, 0)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.hydra_progressbar = IndeterminateProgressBar(self.CardWidget)
+        self.hydra_progressbar.setObjectName("hydra_progressbar")
+        self.hydra_progressbar.setVisible(False)
+        self.horizontalLayout_4.addWidget(self.hydra_progressbar)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
         self.gridLayout_5.addWidget(self.CardWidget, 2, 1, 1, 1)
         self.CardWidget_2 = CardWidget(self.reseauciblecard)
         self.CardWidget_2.setMinimumSize(QtCore.QSize(480, 120))
@@ -258,5 +266,5 @@ class Ui_EvaluationInterface(object):
         self.passwordchecker.setPlaceholderText(_translate("EvaluationInterface", "Entrer le mot de passe à vérifier"))
         self.CaptionLabel_3.setText(_translate("EvaluationInterface", "Console des actions en cours :"))
         self.StrongBodyLabel.setText(_translate("EvaluationInterface", "Exploitation - Evaluation des Vulnérabilités"))
-from qfluentwidgets import CaptionLabel, CardWidget, ComboBox, IconWidget, PasswordLineEdit, PrimaryPushButton, StrongBodyLabel, TextEdit, TitleLabel, VerticalSeparator
+from qfluentwidgets import CaptionLabel, CardWidget, ComboBox, IconWidget, IndeterminateProgressBar, PasswordLineEdit, PrimaryPushButton, StrongBodyLabel, TextEdit, TitleLabel, VerticalSeparator
 import app.resource.resource_rc

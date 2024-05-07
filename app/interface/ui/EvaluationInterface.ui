@@ -395,6 +395,16 @@
                  </item>
                 </layout>
                </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="IndeterminateProgressBar" name="hydra_progressbar"/>
+                 </item>
+                </layout>
+               </item>
               </layout>
              </widget>
             </item>
@@ -718,6 +728,11 @@
   <customwidget>
    <class>TitleLabel</class>
    <extends>QLabel</extends>
+   <header>qfluentwidgets</header>
+  </customwidget>
+  <customwidget>
+   <class>IndeterminateProgressBar</class>
+   <extends>QProgressBar</extends>
    <header>qfluentwidgets</header>
   </customwidget>
   <customwidget>

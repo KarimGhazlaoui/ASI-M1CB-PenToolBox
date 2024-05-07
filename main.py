@@ -1,5 +1,6 @@
 # coding:utf-8
 import sys
+import paramiko
 
 from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QIcon
@@ -43,6 +44,33 @@ class Worker(QThread):
             self.result.emit(result)
         self.finished.emit()
 
+class SSHWorker(QThread):
+    update_signal = pyqtSignal(str)  # Signal to send updates to the GUI
+    finished_signal = pyqtSignal()
+
+    def __init__(self, host='127.0.0.1', port=60022, username='kali', password='root', command=None):
+        super().__init__()
+        self.host = host
+        self.port = port
+        self.username = username
+        self.password = password
+        self.command = command + ' && echo "command completed"'
+
+    def run(self):
+        try:
+            client = paramiko.SSHClient()
+            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            client.connect(self.host, self.port, username=self.username, password=self.password)
+            stdin, stdout, stderr = client.exec_command(self.command)
+            for line in stdout:
+                self.update_signal.emit(line.strip())
+                if "command completed" in line:  # Check for completion indicator
+                    self.finished_signal.emit()
+            for line in stderr:
+                self.update_signal.emit(line.strip())
+            client.close()
+        except Exception as e:
+            self.update_signal.emit(f"Error: {str(e)}")
 
 class main(SplitFluentWindow):
 
@@ -245,8 +273,18 @@ class main(SplitFluentWindow):
 
         self.evaluationInterface.complexitepassword.setText(f"Complexité du mot de passe : {strength}")
 
-    def hydra_lancement(self, hydra_cible):
-        pass
+    def hydra_lancement(self):
+        hydra_cible = self.evaluationInterface.hydracomboboxtarget.currentText()
+        self.evaluationInterface.hydra_progressbar.setVisible(True)
+
+        command = f"cd passwords-and-usernames && hydra -l root -P xato-net-10-million-passwords-1000.txt {hydra_cible} ftp"
+        self.worker = SSHWorker(command=command)
+        self.worker.update_signal.connect(self.evaluationInterface.evaluationterminal.append)
+        self.worker.finished_signal.connect(self.on_hydra_completion)  # Connect to slot for completion
+        self.worker.start()
+
+    def on_hydra_completion(self):
+        self.evaluationInterface.hydra_progressbar.setVisible(False)
 
 
     def closeEvent(self, event):
