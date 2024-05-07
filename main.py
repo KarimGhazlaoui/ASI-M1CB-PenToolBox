@@ -6,7 +6,7 @@ from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
 
-from qfluentwidgets import SplitFluentWindow, FluentIcon, Flyout, InfoBarIcon, FlyoutAnimationType, MessageBox
+from qfluentwidgets import SplitFluentWindow, FluentIcon, Flyout, InfoBarIcon, FlyoutAnimationType, MessageBox, NavigationItemPosition
 
 from app.interface.scan_interface import ScanInterface
 from app.interface.engagement_interface import EngagementInterface
@@ -19,7 +19,7 @@ from app.scripts.qemu_script import QemuManager
 from app.engagement import CustomMessageBox
 from app.scripts.profile_script import Profile
 from app.scripts.gvm_script import gvm
-from app.scripts.rapport_script import rapport
+from app.scripts.rapport_script import RapportGenerateur
 from app.automatisation import scan_vers_cible
 from app.scripts.qemu_script import QemuManager
 
@@ -112,13 +112,25 @@ class main(SplitFluentWindow):
         self.evaluationInterface = EvaluationInterface(self)
         self.qemuInterface = QemuInterface(self)
 
+        pos = NavigationItemPosition.SCROLL
+
         #self.addSubInterface(self.engagementInterface, QIcon(":/images/agreement.png"), 'Interactions Pré-engagement')
         self.addSubInterface(self.scanInterface, QIcon(":/images/scaninterfaceicon.png"), 'Scan - Cible et Reconnaissance')
         self.addSubInterface(self.cibleInterface, QIcon(":/images/cible.png"), 'Scan - Cibles Détectées')
         self.addSubInterface(self.vulnerabiliteInterface, QIcon(":/images/vulnerabilite.png"), 'Exploitation - Vulnérabilitées')
         self.addSubInterface(self.evaluationInterface, QIcon(":/images/strike.png"), 'Exploitation - Evaluation des Vulnérabilités')
-
+        self.navigationInterface.addSeparator()
         self.addSubInterface(self.qemuInterface, QIcon(":/images/kali.png"), 'Kali - Control Center')
+
+        self.navigationInterface.addItem(
+            routeKey='price',
+            icon=QIcon(":/images/agreement.png"),
+            text="Générer un Rapport",
+            onClick=self.ReportCreator,
+            selectable=False,
+            tooltip="Génère un rapport",
+            position=NavigationItemPosition.BOTTOM
+        )
 
         self.scanInterface.boutonprofilecreation.clicked.connect(self.profiles_creation)
         self.scanInterface.chargementprofile.clicked.connect(self.chargement_profile)
@@ -201,6 +213,13 @@ class main(SplitFluentWindow):
         else:
             print("Aucun profile sélectionné")
 
+    def ReportCreator(self):
+        selected_profile = self.scanInterface.actualprofile.text()
+        generer_pdf = RapportGenerateur(Profile)
+        if selected_profile:
+            generer_pdf.GenererRapport(Profile=selected_profile)
+        else:
+            print("Aucun profil")
 
     def lancer_scan(self):
         if self.scanInterface.actualprofile.text():
