@@ -337,7 +337,7 @@
                     </size>
                    </property>
                    <property name="text">
-                    <string>Cible disponible :</string>
+                    <string>Cibles disponible :</string>
                    </property>
                   </widget>
                  </item>
