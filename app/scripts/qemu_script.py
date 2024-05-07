@@ -15,7 +15,7 @@ class QemuManager:
             '-hda', r'app\qemu\kali\kali.qcow2',
             '-usbdevice', 'tablet',
             '-name', 'kali',
-            '-nic', 'user,id=vmnic,hostfwd=tcp::60022-:22,hostfwd=tcp::9392-:9392',
+            '-nic', 'user,restrict=off,model=virtio,id=vmnic,hostfwd=tcp::60022-:22,hostfwd=tcp::9392-:9392',
             '-monitor', 'stdio',
             '-vga',  'vmware',
             '-loadvm', 'gvm',
