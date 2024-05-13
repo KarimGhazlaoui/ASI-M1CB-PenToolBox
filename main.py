@@ -1,12 +1,14 @@
 # coding:utf-8
 import sys
 import paramiko
+import time
+import xml.etree.ElementTree as ET
 
-from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal
+from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal, QSize, QTimer
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
 
-from qfluentwidgets import SplitFluentWindow, FluentIcon, Flyout, InfoBarIcon, FlyoutAnimationType, MessageBox, NavigationItemPosition
+from qfluentwidgets import SplitFluentWindow, FluentIcon, Flyout, InfoBarIcon, FlyoutAnimationType, MessageBox, NavigationItemPosition, SplashScreen
 
 from app.interface.scan_interface import ScanInterface
 from app.interface.engagement_interface import EngagementInterface
@@ -61,6 +63,7 @@ class SSHWorker(QThread):
         self.output = ""  # Attribut pour stocker la sortie de la commande
 
     def run(self):
+        print("démarrage run worker")
         try:
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -87,7 +90,8 @@ class SSHWorker(QThread):
 class main(SplitFluentWindow):
 
     automatisation = scan_vers_cible()
-    
+    global_taskid = ""
+
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.gvm_management = gvm(self)
@@ -99,15 +103,9 @@ class main(SplitFluentWindow):
         # Localisation des profiles d'entreprises
         self.profile_manager = Profile('app/profiles')
 
-        # Intégration QemuManager        
-        self.qemu_manager = QemuManager()
-        self.qemu_manager.start_qemu()
+        self.initWindow()
 
-        # Préparation paramètre fenêtre PyQt5
-        self.resize(1280, 800)
-        self.setWindowTitle("KGB - PenToolBox")
-        self.setWindowIcon(QIcon(':/images/logo.png'))
-
+        # Création des sous-interface
         self.scanInterface = ScanInterface(self)
         #self.engagementInterface = EngagementInterface(self)
         self.cibleInterface = CibleInterface(self)
@@ -116,6 +114,12 @@ class main(SplitFluentWindow):
         self.qemuInterface = QemuInterface(self)
 
         pos = NavigationItemPosition.SCROLL
+
+        self.initNavigation()
+        self.splashScreen.finish()
+
+    # Creation des interfaces
+    def initNavigation(self):
 
         # Ajout des sous-interfaces à la fenêtre principale
         self.addSubInterface(self.scanInterface, QIcon(":/images/scaninterfaceicon.png"), 'Scan - Cible et Reconnaissance')
@@ -147,6 +151,35 @@ class main(SplitFluentWindow):
         self.evaluationInterface.hydraexecution.clicked.connect(self.hydra_lancement)
 
         self.profiles_initialisation()
+
+    # Splash Screen démarrage
+    def initWindow(self):
+        # Préparation paramètre fenêtre PyQt5
+        self.resize(1280, 800)
+        self.setWindowTitle("KGB - PenToolBox")
+        self.setWindowIcon(QIcon(':/images/logo.png'))
+
+        # create splash screen
+        self.splashScreen = SplashScreen(self.windowIcon(), self)
+        self.splashScreen.setIconSize(QSize(106, 106))
+        self.splashScreen.raise_()
+
+        desktop = QApplication.desktop().availableGeometry()
+        w, h = desktop.width(), desktop.height()
+        self.move(w//2 - self.width()//2, h//2 - self.height()//2)
+        self.show()
+        # Intégration QemuManager        
+        self.qemu_manager = QemuManager()
+        self.qemu_manager.start_qemu()
+        #time.sleep(5)
+        self.qemu_manager = QemuManager()
+        self.qemu_manager.prep_kali()
+        QApplication.processEvents()
+
+    def resizeEvent(self, e):
+        super().resizeEvent(e)
+        if hasattr(self, 'splashScreen'):
+            self.splashScreen.resize(self.size())
 
     # Fonction pour initialiser les profils
     def profiles_initialisation(self):
@@ -273,7 +306,7 @@ class main(SplitFluentWindow):
             print(cible_table)
             vulnerabilite = self.gvm_management.scan_vulnerabilite(cible_table)
             print(vulnerabilite)
-            SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface)
+            #SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface)
         else:
             self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune cible disponible", contenu="Aucune cible n'existe, effectuer un scan au préalable", cible=self.cibleInterface.scanvulnerabilite)
 
@@ -291,28 +324,64 @@ class main(SplitFluentWindow):
         cible_table = self.cibleInterface.TableContents()
         print(cible_table)
 
-        # Fonction pour lancer Hydra
-    def gvm_lancement(self):
-        hydra_cible = self.evaluationInterface.hydracomboboxtarget.currentText()
-        self.evaluationInterface.hydra_progressbar.setVisible(True)
-
-        command = f"cd passwords-and-usernames && hydra -L top-usernames-shortlist.txt -P xato-net-10-million-passwords-10.txt {hydra_cible} ftp"
-        self.worker = SSHWorker(command=command)
-        self.worker.update_signal.connect(self.evaluationInterface.evaluationterminal.append)
-        self.worker.finished_signal.connect(self.gvm_fin)  # Se connecter au slot pour la fin
-        self.worker.start()
+    # Fonction pour créer la tâche GVM
+    def gvm_creation(self, commandssh=None, callback=None):
+        if commandssh is not None:
+            print("gvm_creation, contenu commandssh :", commandssh)
+            self.worker = SSHWorker(command=commandssh)
+            self.worker.update_signal.connect(self.cibleInterface.vulnerabilitelive.append)
+            self.worker.finished_signal.connect(lambda: self.gvm_fin(callback))  # Se connecter au slot pour la fin
+            self.worker.start()
+        else:
+            print("GVM : Commande vide, problème au niveau de la fonction gvm_creation")
 
     # Fonction appelée à la fin de Hydra
-    def gvm_fin(self):
-        hydra_resultat = self.worker.output  # Accéder à l'attribut de sortie
+    def gvm_fin(self, callback):
+        gvm_resultat = self.worker.output  # Accéder à l'attribut de sortie
         selected_profile = self.scanInterface.loadprofile.currentText()
-        self.profile_manager.add_or_update_variable(selected_profile, "hydra_resultat", hydra_resultat)
-        print("Sortie de la commande Hydra :", hydra_resultat)
-        self.evaluationInterface.hydra_progressbar.setVisible(False)
+        self.profile_manager.add_or_update_variable(selected_profile, "gvm_resultat", gvm_resultat)
+        print("Sortie de la commande gvm :", gvm_resultat)
+        if callback:
+            callback(gvm_resultat)
 
     # Fonction pour mettre à jour en temps réel
     def liveupdate(self, livedata):
         self.cibleInterface.liveupdate(livedata)
+
+    # Fonction pour vérifier le status du scan OpenVas
+    def vulnerabilite_status(self, rapportid, taskid):
+        print("vulnerabilite_status taskid :", taskid)
+        print("vulnerabilite_status rapportid :", rapportid)
+        self.global_taskid = taskid
+        self.status = ""
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.vulnerabilite_status_debut)
+
+        self.timer.start(10000)
+
+    def vulnerabilite_status_debut(self):
+        print("global_taskid :", self.global_taskid)
+        if self.global_taskid is not None:
+            commandssh = f"""gvm-cli socket --xml '<get_tasks task_id="{self.global_taskid}"/>' --pretty"""
+            self.worker = SSHWorker(command=commandssh)
+            self.worker.update_signal.connect(self.cibleInterface.vulnerabilitelive.append)
+            self.worker.finished_signal.connect(self.vulnerabilite_status_fin)
+            self.worker.start()
+
+    def vulnerabilite_status_fin(self):
+        self.gvm_management = gvm(self)
+        reponse_status = self.worker.output
+        lines = reponse_status.strip().split('\n')
+        if lines[-1].strip() == 'command completed':
+            lines.pop()
+        reponse_status = '\n'.join(lines)
+
+        self.status = self.gvm_management.status_live_update(response=reponse_status)
+        print("retour status :", self.status)
+
+        livestatus = ("Status :" + str(self.status[0]) + " Pourcentage accomplis :" + str(self.status[1]))
+        self.cibleInterface.liveupdate(livedata=livestatus)
+        
 
     # Fonction pour transférer les cibles vers hydra
     def evaluation_transition(self):

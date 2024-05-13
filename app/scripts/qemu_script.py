@@ -1,4 +1,5 @@
 import subprocess
+import threading
 import paramiko
 import time
 
@@ -7,26 +8,38 @@ class QemuManager:
         pass
 
     def start_qemu(self):
-        # Define QEMU command with monitor enabled
-        qemu_command = [
-            r'app\qemu\qemu-system-x86_64.exe',  # Path to QEMU executable
-            '-m',  '8G',
-            '-smp', '4',
-            '-hda', r'app\qemu\kali\kali.qcow2',
-            '-usbdevice', 'tablet',
-            '-name', 'kali',
-            '-nic', 'user,restrict=off,model=virtio,id=vmnic,hostfwd=tcp::60022-:22,hostfwd=tcp::9392-:9392',
-            '-monitor', 'stdio',
-            '-vga',  'vmware',
-            '-loadvm', 'gvm',
-            '-vnc', ':0'
-        ]
+            # Define QEMU command with monitor enabled
+            qemu_command = [
+                r'app\qemu\qemu-system-x86_64.exe',  # Path to QEMU executable
+                '-m',  '8G',
+                '-smp', '4',
+                '-hda', r'app\qemu\kali\kali.qcow2',
+                '-usbdevice', 'tablet',
+                '-name', 'kali',
+                '-nic', 'user,restrict=off,model=virtio,id=vmnic,hostfwd=tcp::60022-:22,hostfwd=tcp::9392-:9392',
+                '-monitor', 'stdio',
+                '-vga',  'vmware',
+                '-loadvm', 'gvm',
+                '-vnc', ':0'
+            ]
 
+            # Start QEMU in a separate thread
+            self.qemu_thread = threading.Thread(target=self._start_qemu_thread, args=(qemu_command,))
+            self.qemu_thread.start()
+
+    def _start_qemu_thread(self, qemu_command):
         # Start QEMU
         self.qemu_process = subprocess.Popen(qemu_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
         # Wait for QEMU to boot (you may need to adjust the sleep duration)
-        time.sleep(5)
+
+    def terminate_qemu(self):
+        # Terminate QEMU process
+        self.qemu_process.terminate()
+
+        # Wait for the QEMU thread to join (wait for it to finish)
+        self.qemu_thread.join()
+
+    def prep_kali(self):
 
         # SSH connection parameters
         ssh_host = '127.0.0.1'  # Host where QEMU is running
@@ -72,7 +85,8 @@ class QemuSSHManager:
             command_with_completion = f"{command} && echo 'command completed'"
             stdin, stdout, stderr = self.ssh.exec_command(command_with_completion)
             for line in stdout:
-                yield line.strip('\n')
-                if line.strip('\n') == 'command completed':
-                    self.close_connection()
-                    break
+                stripped_line = line.strip('\n')
+                if stripped_line == 'command completed':
+                    continue  # Skip the line if it's "command completed"
+                yield stripped_line
+            self.ssh.close()  # Close SSH connection here

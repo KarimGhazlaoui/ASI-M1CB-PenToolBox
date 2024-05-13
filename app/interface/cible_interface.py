@@ -63,7 +63,3 @@ class CibleInterface(QWidget, Ui_CibleInterface):
             updatelive = livedata
         updatelive = updatelive.replace("command completed", "")
         self.vulnerabilitelive.setText(updatelive)
-
-    def liveprogress(self, progressdata):
-        pass
-
