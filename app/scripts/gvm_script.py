@@ -2,7 +2,7 @@ import csv
 from app.scripts.qemu_script import QemuSSHManager
 from datetime import datetime
 import xml.etree.ElementTree as ET
-import time
+import base64
 
 class gvm():
 
@@ -96,6 +96,7 @@ class gvm():
 
     def traitement_csv(self, donnee_csv):
         scan_resultat = []
+        print(donnee_csv)
         lines = donnee_csv.strip().split('\n')
         header = lines[0].strip().split(',')
         reader = csv.DictReader(lines[1:], fieldnames=header)
@@ -109,3 +110,22 @@ class gvm():
                 'CVE': row.get('CVEs', '')
             })
         return scan_resultat
+
+    def rapport_nettoyage(self, xml_string):
+        # Remove everything before word1
+        index1 = xml_string.find('</report_format>')
+        if index1 != -1:
+            xml_string = xml_string[index1 + len('</report_format>'):]
+
+        # Remove everything after word2
+        index2 = xml_string.find('</report>')
+        if index2 != -1:
+            xml_string = xml_string[:index2]
+
+        print(xml_string)
+
+        # Decode the base64 string
+        decoded_bytes = base64.b64decode(xml_string)
+        # Convert bytes to string
+        decoded_text = decoded_bytes.decode('utf-8')  # Assuming utf-8 encoding
+        return decoded_text

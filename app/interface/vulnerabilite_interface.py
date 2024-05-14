@@ -16,14 +16,14 @@ class VulnerabiliteInterface(QWidget, Ui_VulnerabiliteInterface):
 
     def chargement_vulnerabilite(self, parent=None, vulnerabilite_results=None):
         self.table_widget.setColumnCount(6)
-        self.table_widget.setHorizontalHeaderLabels(["IP", "Port", "Protocol", "Sévérité", "NVT", "CVE"])
+        self.table_widget.setHorizontalHeaderLabels(["IP", "Port", "Protocole", "Sévérité", "NVT", "CVE"])
 
         self.table_widget.setRowCount(len(vulnerabilite_results))
 
         for row, result in enumerate(vulnerabilite_results):
             self.table_widget.setItem(row, 0, QTableWidgetItem(result['IP']))
             self.table_widget.setItem(row, 1, QTableWidgetItem(result['Port']))
-            self.table_widget.setItem(row, 2, QTableWidgetItem(result['Protocol']))
+            self.table_widget.setItem(row, 2, QTableWidgetItem(result['Protocole']))
             self.table_widget.setItem(row, 4, QTableWidgetItem(result['NVT']))
             self.table_widget.setItem(row, 5, QTableWidgetItem(result['CVE']))
 

@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QPainter, QColor, QIcon
-from PyQt5.QtWidgets import QWidget, QTableWidgetItem
+from PyQt5.QtGui import QPixmap, QPainter, QColor, QFont, QBrush
+from PyQt5.QtWidgets import QWidget, QTableWidgetItem, QProgressBar
 
 from qfluentwidgets import FluentIcon as FIF, InfoBarIcon
 from .Ui_CibleInterface import Ui_CibleInterface
@@ -11,6 +11,7 @@ class CibleInterface(QWidget, Ui_CibleInterface):
         super().__init__(parent=parent)
         self.setupUi(self)
         self.table = self.cibledetecte
+        self.table2 = self.vulnerabilitetablelive
 
     def cibletable(self, parent=None, scan_results=None):
 
@@ -63,3 +64,37 @@ class CibleInterface(QWidget, Ui_CibleInterface):
             updatelive = livedata
         updatelive = updatelive.replace("command completed", "")
         self.vulnerabilitelive.setText(updatelive)
+
+    def gvm_progress_table(self, liveprogress):
+
+        task_id, status, progression = liveprogress
+        
+        # Update TASK ID
+        task_id_item = QTableWidgetItem(task_id)
+        task_id_item.setTextAlignment(Qt.AlignCenter)
+        self.table2.setItem(0, 0, task_id_item)
+
+        bold_font = QFont()
+        bold_font.setBold(True)
+        
+        # Update STATUS and set its color
+        status_item = QTableWidgetItem(status)
+        status_item.setTextAlignment(Qt.AlignCenter)
+        status_item.setFont(bold_font)
+        if status == 'Requested' or status == 'Queued':
+            status_item.setBackground(QColor('orange'))
+        elif status == 'Running':
+            status_item.setBackground(QColor('green'))
+            status_item.setForeground(QBrush(QColor('white')))
+        elif status == 'Done':
+            status_item.setBackground(QColor('blue'))
+            status_item.setForeground(QBrush(QColor('white')))
+        self.table2.setItem(0, 1, status_item)
+        
+        # Update PROGRESSION with a progress bar
+        progress_bar = QProgressBar()
+        progress_bar.setValue(progression)
+        self.table2.setCellWidget(0, 2, progress_bar)
+        # Center the progress bar in the cell
+        self.table2.setColumnWidth(2, 150)  # Adjust the width of the column to fit the progress bar
+        progress_bar.setAlignment(Qt.AlignCenter)  # Center the progress bar text

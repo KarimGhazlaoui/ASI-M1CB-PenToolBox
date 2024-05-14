@@ -10,10 +10,16 @@
     <height>1076</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
-    <width>804</width>
-    <height>858</height>
+    <width>1520</width>
+    <height>1076</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -405,25 +411,41 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>0</height>
+         <height>80</height>
         </size>
        </property>
+       <property name="rowCount">
+        <number>1</number>
+       </property>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>450</number>
+       </attribute>
        <attribute name="horizontalHeaderStretchLastSection">
         <bool>true</bool>
        </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
+       <row/>
        <column>
         <property name="text">
-         <string>ID</string>
+         <string>TASK ID</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Status</string>
+         <string>STATUS</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Pourcentage</string>
+         <string>PROGRESSION</string>
         </property>
        </column>
       </widget>

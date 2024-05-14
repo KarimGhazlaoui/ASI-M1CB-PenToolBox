@@ -91,6 +91,7 @@ class main(SplitFluentWindow):
 
     automatisation = scan_vers_cible()
     global_taskid = ""
+    global_rapportid = "31f31539-c738-4a0a-9493-b784bb5ce16a"
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -151,6 +152,7 @@ class main(SplitFluentWindow):
         self.evaluationInterface.hydraexecution.clicked.connect(self.hydra_lancement)
 
         self.profiles_initialisation()
+        self.vulnerabilite_traitement_start()
 
     # Splash Screen démarrage
     def initWindow(self):
@@ -352,7 +354,10 @@ class main(SplitFluentWindow):
     def vulnerabilite_status(self, rapportid, taskid):
         print("vulnerabilite_status taskid :", taskid)
         print("vulnerabilite_status rapportid :", rapportid)
+        self.global_rapportid = rapportid
         self.global_taskid = taskid
+        livestatus = [self.global_taskid, 'Création', 0]
+        self.cibleInterface.gvm_progress_table(liveprogress=livestatus)
         self.status = ""
         self.timer = QTimer()
         self.timer.timeout.connect(self.vulnerabilite_status_debut)
@@ -364,13 +369,14 @@ class main(SplitFluentWindow):
         if self.global_taskid is not None:
             commandssh = f"""gvm-cli socket --xml '<get_tasks task_id="{self.global_taskid}"/>' --pretty"""
             self.worker = SSHWorker(command=commandssh)
-            self.worker.update_signal.connect(self.cibleInterface.vulnerabilitelive.append)
+            #self.worker.update_signal.connect(self.cibleInterface.vulnerabilitelive.append)
             self.worker.finished_signal.connect(self.vulnerabilite_status_fin)
             self.worker.start()
 
     def vulnerabilite_status_fin(self):
         self.gvm_management = gvm(self)
         reponse_status = self.worker.output
+        print(reponse_status)
         lines = reponse_status.strip().split('\n')
         if lines[-1].strip() == 'command completed':
             lines.pop()
@@ -379,9 +385,38 @@ class main(SplitFluentWindow):
         self.status = self.gvm_management.status_live_update(response=reponse_status)
         print("retour status :", self.status)
 
-        livestatus = ("Status :" + str(self.status[0]) + " Pourcentage accomplis :" + str(self.status[1]))
-        self.cibleInterface.liveupdate(livedata=livestatus)
-        
+        if self.status[0] == "Done":
+            self.timer.stop()
+            self.vulnerabilite_traitement_start
+
+        livestatus = [self.global_taskid, self.status[0], self.status[1]]
+
+        self.cibleInterface.gvm_progress_table(liveprogress=livestatus)
+
+    def vulnerabilite_traitement_start(self):
+        if self.global_rapportid is not None:
+            commandssh = f"""gvm-cli socket --xml "<get_reports report_id='{self.global_rapportid}' details='True' sort-reverse='severity' format_id='c1645568-627a-11e3-a660-406186ea4fc5'/>" --pretty"""
+            self.worker = SSHWorker(command=commandssh)
+            self.worker.finished_signal.connect(self.vulnerabilite_traitement_fin)
+            self.worker.start()
+
+    def vulnerabilite_traitement_fin(self):
+        self.gvm_management = gvm(self)
+        rapport = self.worker.output
+        lines = rapport.strip().split('\n')
+        if lines[-1].strip() == 'command completed':
+            lines.pop()
+        rapport = '\n'.join(lines)
+
+        rapport_clean = self.gvm_management.rapport_nettoyage(rapport)
+
+        cve_csv = self.gvm_management.traitement_csv(donnee_csv=rapport_clean)
+
+        # Sauvegarde dans le profile du résultat
+        #selected_profile = self.scanInterface.loadprofile.currentText()
+        #self.profile_manager.add_or_update_variable(selected_profile, "vulnerabilite_detecte", cve_csv)
+
+        self.vulnerabiliteInterface.chargement_vulnerabilite(vulnerabilite_results=cve_csv)
 
     # Fonction pour transférer les cibles vers hydra
     def evaluation_transition(self):
