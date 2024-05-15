@@ -35,8 +35,15 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 
 ## Commentaires
 
-Veuillez noter que l'outil est encore en phase de développement initial.  
-Par conséquent, il n'est pas compilé et nécessite d'être lancé via Python en utilisant main.py.
+Veuillez noter que l'outil est encore en phase de développement. 
+Des bugs critique peuvent encore exister.
+
+## Utilisation
+
+Une version compilé pour windows est disponible 🆕
+Plus simple et plus rapide à mettre en oeuvre, à télécharger ci-dessous :
+
+[Page des releases](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/executable)<br>
 
 ## Installation
 
