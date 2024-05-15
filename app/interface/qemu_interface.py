@@ -12,6 +12,7 @@ class QemuInterface(QWidget, Ui_QemuInterface):
         super().__init__(parent=parent)
         self.setupUi(self)
 
+    def vnc_start(self):
         # Create a layout for the "QVNC" widget
         layout = QVBoxLayout(self.QVNC)
         #layout.setContentsMargins(0, 0, 0, 0)  # Remove margins
@@ -24,7 +25,7 @@ class QemuInterface(QWidget, Ui_QemuInterface):
         self.vnc_widget.setFocusPolicy(Qt.StrongFocus)  # Set focus policy
         self.vnc_widget.onInitialResize.connect(self.resize)
         self.vnc_widget.start()
-        
+
     def keyPressEvent(self, ev):
         print("KaliViewerInterface keyPressEvent")
         self.vnc_widget.keyPressEvent(ev)

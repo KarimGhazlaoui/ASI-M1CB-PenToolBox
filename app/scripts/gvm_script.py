@@ -101,14 +101,22 @@ class gvm():
         header = lines[0].strip().split(',')
         reader = csv.DictReader(lines[1:], fieldnames=header)
         for row in reader:
-            scan_resultat.append({
-                'IP': row.get('IP', ''),
-                'Port': row.get('Port', ''),
-                'Protocole': row.get('Port Protocol', ''),
-                'Sévérité': row.get('Severity', ''),
-                'NVT': row.get('NVT Name', ''),
-                'CVE': row.get('CVEs', '')
-            })
+            if row.get('Severity', '') != 'Log':
+                scan_resultat.append({
+                    'IP': row.get('IP', ''),
+                    'Port': row.get('Port', ''),
+                    'Protocole': row.get('Port Protocol', ''),
+                    'Sévérité': row.get('Severity', ''),
+                    'NVT': row.get('NVT Name', ''),
+                    'CVE': row.get('CVEs', '')
+                })
+
+        # Define custom sort order
+        severity_order = {'High': 0, 'Medium': 1, 'Low': 2}
+        
+        # Sort scan_resultat by 'Sévérité' using the custom sort order
+        scan_resultat.sort(key=lambda x: severity_order.get(x['Sévérité'], 3))
+        
         return scan_resultat
 
     def rapport_nettoyage(self, xml_string):

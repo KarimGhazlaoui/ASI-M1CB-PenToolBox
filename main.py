@@ -1,12 +1,13 @@
 # coding:utf-8
 import sys
+import subprocess
 import paramiko
-import time
+import datetime
 import xml.etree.ElementTree as ET
 
 from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal, QSize, QTimer
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QFileDialog
 
 from qfluentwidgets import SplitFluentWindow, FluentIcon, Flyout, InfoBarIcon, FlyoutAnimationType, MessageBox, NavigationItemPosition, SplashScreen
 
@@ -86,12 +87,37 @@ class SSHWorker(QThread):
             self.update_signal.emit(error_message)
             self.output += error_message + "\n"  # Ajouter le message d'erreur à l'attribut
 
+class QemuWorker(QThread):
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        qemu_command = [
+            r'app\qemu\qemu-system-x86_64.exe',
+            '-m', '8G',
+            '-smp', '4',
+            '-hda', r'app\qemu\kali\kali.qcow2',
+            '-usbdevice', 'tablet',
+            '-name', 'kali',
+            '-nic', 'user,restrict=off,model=virtio,id=vmnic,hostfwd=tcp::60022-:22,hostfwd=tcp::9392-:9392',
+            '-monitor', 'stdio',
+            '-vga', 'vmware',
+            '-loadvm', 'gvm',
+            '-vnc', ':0'
+        ]
+        self.qemu_process = subprocess.Popen(qemu_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    def terminate_qemu(self):
+        if self.qemu_process:
+            self.qemu_process.terminate()
+            self.qemu_process.wait()
+
 # Classe principale
 class main(SplitFluentWindow):
 
     automatisation = scan_vers_cible()
     global_taskid = ""
-    global_rapportid = "31f31539-c738-4a0a-9493-b784bb5ce16a"
+    global_rapportid = ""
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -132,7 +158,7 @@ class main(SplitFluentWindow):
 
         # Ajout d'un élément de navigation pour générer un rapport
         self.navigationInterface.addItem(
-            routeKey='price',
+            routeKey='rapport',
             icon=QIcon(":/images/agreement.png"),
             text="Générer un Rapport",
             onClick=self.ReportCreator,
@@ -152,10 +178,10 @@ class main(SplitFluentWindow):
         self.evaluationInterface.hydraexecution.clicked.connect(self.hydra_lancement)
 
         self.profiles_initialisation()
-        self.vulnerabilite_traitement_start()
 
     # Splash Screen démarrage
     def initWindow(self):
+        self.qemu_manager = QemuManager()
         # Préparation paramètre fenêtre PyQt5
         self.resize(1280, 800)
         self.setWindowTitle("KGB - PenToolBox")
@@ -170,13 +196,22 @@ class main(SplitFluentWindow):
         w, h = desktop.width(), desktop.height()
         self.move(w//2 - self.width()//2, h//2 - self.height()//2)
         self.show()
-        # Intégration QemuManager        
-        self.qemu_manager = QemuManager()
-        self.qemu_manager.start_qemu()
-        #time.sleep(5)
-        self.qemu_manager = QemuManager()
-        self.qemu_manager.prep_kali()
+        
+        # Start QEMU in a separate thread
+        self.qemu_worker = QemuWorker()
+        self.qemu_worker.start()
+        self.qemu_worker.finished.connect(self.qemu_started)
         QApplication.processEvents()
+    
+    def qemu_started(self):
+        self.qemu_manager.prep_kali()
+        self.qemuInterface.vnc_start()
+        QApplication.processEvents()
+
+    def terminate_qemu(self):
+        if self.qemu_worker:
+            self.qemu_worker.terminate_qemu()
+            self.qemu_worker.wait()
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
@@ -257,11 +292,42 @@ class main(SplitFluentWindow):
     # Fonction pour générer un rapport
     def ReportCreator(self):
         selected_profile = self.scanInterface.actualprofile.text()
-        generer_pdf = RapportGenerateur(Profile)
-        if selected_profile:
-            generer_pdf.GenererRapport(Profile=selected_profile)
-        else:
+
+        if not selected_profile:
+            self.infofly(
+                icone=InfoBarIcon.ERROR,
+                titre="Aucun profil sélectionné",
+                contenu="Merci de charger ou créer un profil",
+                cible=self.scanInterface.lancementscan
+            )
             print("Aucun profil")
+            return
+
+        # Get the current date in European French format
+        current_date = datetime.datetime.now().strftime("%d-%m-%Y")
+        default_filename = f"rapport_{selected_profile}_{current_date}.pdf"
+
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(self, 'Sauvegarder le rapport', default_filename, 'PDF (*.pdf)', options=options)
+
+        if file_path:
+            generer_pdf = RapportGenerateur(selected_profile)
+            generer_pdf.GenererRapport(Profile=selected_profile, file_path=file_path)
+            self.infofly(
+                icone=InfoBarIcon.SUCCESS,
+                titre="Rapport généré avec succès",
+                contenu=f"Votre rapport est disponible pour {selected_profile}",
+                cible=self.scanInterface.lancementscan
+            )
+        else:
+            self.infofly(
+                icone=InfoBarIcon.WARNING,
+                titre="Opération annulée",
+                contenu="Vous avez annulé la sauvegarde du rapport",
+                cible=self.scanInterface.lancementscan
+            )
+            print("Annulation de la génération du rapport")
+
 
     # Fonction pour lancer un scan
     def lancer_scan(self):
@@ -395,7 +461,7 @@ class main(SplitFluentWindow):
 
     def vulnerabilite_traitement_start(self):
         if self.global_rapportid is not None:
-            commandssh = f"""gvm-cli socket --xml "<get_reports report_id='{self.global_rapportid}' details='True' sort-reverse='severity' format_id='c1645568-627a-11e3-a660-406186ea4fc5'/>" --pretty"""
+            commandssh = f"""gvm-cli socket --xml "<get_reports report_id='{self.global_rapportid}' apply_overrides='0' levels='hml' min_qod='50' first='1' rows='1000' sort='severity' ignore_pagination='1' details='1' format_id='c1645568-627a-11e3-a660-406186ea4fc5'/>" --pretty"""
             self.worker = SSHWorker(command=commandssh)
             self.worker.finished_signal.connect(self.vulnerabilite_traitement_fin)
             self.worker.start()
@@ -501,17 +567,22 @@ class main(SplitFluentWindow):
 
     # Fonction pour gérer l'événement de fermeture
     def closeEvent(self, event):
-        # Gérer l'événement de fermeture
+        self.qemu_manager = QemuManager()
+        # Handle the close event
         reply = QMessageBox.question(self, 'Message',
-            "Êtes-vous sûr de vouloir fermer la PenToolBox ?", QMessageBox.Yes |
-            QMessageBox.No, QMessageBox.No)
+                                     "Êtes-vous sûr de vouloir fermer la PenToolBox ?", QMessageBox.Yes |
+                                     QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             event.accept()
-            self.qemu_manager.terminate_qemu()
+            print("Fermeture du KGB - PenToolBox")
+            self.qemuInterface.vnc_widget.stop()
+            super().closeEvent(event)
+            self.terminate_qemu()
             if self.worker and self.worker.isRunning():
-                self.worker.finished.connect(lambda: self.worker.deleteLater())  # Attendre que le worker ait fini avant de supprimer
-                self.worker.stop()  # Arrêter le worker
+                self.worker.finished.connect(lambda: self.worker.deleteLater())  # Wait for the worker to finish before deleting
+                self.worker.stop()  # Stop the worker
+                print("Worker arrêté")
             else:
                 QApplication.quit()
         else:

@@ -299,6 +299,42 @@
                 <height>500</height>
                </size>
               </property>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>100</number>
+              </attribute>
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>IP</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>PORT</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>PROTOCOLE</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SEVERITE</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>NVT</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>CVE</string>
+               </property>
+              </column>
              </widget>
             </item>
            </layout>

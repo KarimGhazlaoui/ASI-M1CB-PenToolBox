@@ -204,11 +204,11 @@ class RapportGenerateur:
 
         return toolname, subnet_scanned, target_discovered, cve_list, hydra_scan_result
     
-    def GenererRapport(self, Profile):
+    def GenererRapport(self, Profile, file_path):
 
         if Profile:
             # Path to the JSON file
-            json_file_path = os.path.join(self.current_dir, "..", "profiles", Profile+".kgb")
+            json_file_path = os.path.join(self.current_dir, "..", "profiles", Profile + ".kgb")
 
             # Read data from JSON file using self.read_json
             data = self.read_json(json_file_path)
@@ -216,10 +216,8 @@ class RapportGenerateur:
             # Extract relevant information
             toolname, subnet_scanned, target_discovered, cve_discovered, hydra_scan_result = self.extract_info(data)
 
-            # Path to save the PDF report
-            pdf_file_path = os.path.join(self.current_dir, "cybersecurity_report.pdf")
-
             # Generate PDF report
-            self.generate_pdf_report(pdf_file_path, toolname, subnet_scanned, target_discovered, cve_discovered, hydra_scan_result)
+            self.generate_pdf_report(file_path, toolname, subnet_scanned, target_discovered, cve_discovered, hydra_scan_result)
         else:
             return
+
