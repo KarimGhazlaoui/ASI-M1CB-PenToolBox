@@ -29,6 +29,10 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 - **Post-Exploitation**: Phase de maintien de l'accès et d'exploration plus approfondie des systèmes compromis.
 - **Reporting**: Génération de rapports détaillés pour documenter les résultats des tests de pénétration.
 
+<p align="center">
+  <img src="./images/rapport.gif">
+</p>
+
 ## Commentaires
 
 Veuillez noter que l'outil est encore en phase de développement initial.  
