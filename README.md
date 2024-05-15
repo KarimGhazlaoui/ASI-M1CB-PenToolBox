@@ -63,7 +63,7 @@ python main.py
 Les contributions sont les bienvenues ! Si vous souhaitez contribuer à ce projet, n'hésitez pas à ouvrir une issue pour discuter des changements que vous souhaitez apporter.
 
 ## Licence
-Ce projet est sous licence <span style="font-size:1.5em; font-weight:bold;">GPL-2.0</span>.
+Ce projet est sous licence <span style="font-size:1.5em; font-weight:bold;">GPL-3.0</span>.
 
 ### Licences des Composants Utilisés
 
