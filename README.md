@@ -12,10 +12,14 @@ Cet outil a été conçu dans le but d'aider les professionnels de la cybersécu
 
 Exclusivement fonctionnel sur Windows actuellement, il incorpore des fonctionnalités inédites tel que l'intégration complète de Kali.
 Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans aucunte limite, tout en permettant en cas de besoin d'avoir la main directement sur celle-ci.
-![](./images/demo.gif)
+
+
+
 <p align="center">
   <img src="./images/demo.gif">
 </p>
+
+
 
 ## Fonctionnalités Clé
 
