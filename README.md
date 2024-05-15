@@ -41,6 +41,7 @@ Des bugs critique peuvent encore exister.
 ## Utilisation
 
 Une version compilé pour windows est disponible 🆕
+
 Plus simple et plus rapide à mettre en oeuvre, à télécharger ci-dessous :
 
 [Page des releases](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/executable)<br>
