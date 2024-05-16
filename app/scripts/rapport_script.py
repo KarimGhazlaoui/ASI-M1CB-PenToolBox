@@ -5,12 +5,13 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, 
 from datetime import datetime
 import json
 import os
+import sys
 from bs4 import BeautifulSoup
+import time
 
 class RapportGenerateur:
     def __init__(self, profile):
         self.profile = profile
-        self.current_dir = os.path.dirname(os.path.abspath(__file__))
 
     def preprocess_hydra_scan_result(self, hydra_scan_result):
         # Parse the Hydra scan result to extract table data
@@ -49,7 +50,7 @@ class RapportGenerateur:
                                         ]))
         return hydra_table
 
-    def generate_pdf_report(self, filename, toolname, subnet_scanned=None, target_discovered=None, cve_discovered=None, hydra_scan_result=None):
+    def generate_pdf_report(self, filename, toolname, subnet_scanned=None, target_discovered=None, cve_discovered=None, hydra_scan_result=None, system_path=None):
         try:
             doc = SimpleDocTemplate(filename, pagesize=landscape(letter))
             styles = getSampleStyleSheet()
@@ -64,7 +65,7 @@ class RapportGenerateur:
             current_date_time = now.strftime("%d/%m/%Y %H:%M:%S")
 
             # Add logo
-            logo_path = os.path.join(self.current_dir, "..", "resource", "images", "logo.png")  # Replace with the actual path to your logo
+            logo_path = os.path.join(system_path, "app", "resource", "images", "logo.png")
             logo = Image(logo_path, width=100, height=100)
 
             content = [
@@ -204,11 +205,18 @@ class RapportGenerateur:
 
         return toolname, subnet_scanned, target_discovered, cve_list, hydra_scan_result
     
-    def GenererRapport(self, Profile, file_path):
+    def GenererRapport(self, Profile, file_path, system_path):
+
+        print(system_path)
+
+        if '_internal' in system_path:
+            system_path = system_path.replace('_internal', '')
+
+        print(system_path)
 
         if Profile:
             # Path to the JSON file
-            json_file_path = os.path.join(self.current_dir, "..", "profiles", Profile + ".kgb")
+            json_file_path = os.path.join(system_path, "app", "profiles", f"{Profile}.kgb")
 
             # Read data from JSON file using self.read_json
             data = self.read_json(json_file_path)
@@ -217,7 +225,7 @@ class RapportGenerateur:
             toolname, subnet_scanned, target_discovered, cve_discovered, hydra_scan_result = self.extract_info(data)
 
             # Generate PDF report
-            self.generate_pdf_report(file_path, toolname, subnet_scanned, target_discovered, cve_discovered, hydra_scan_result)
+            self.generate_pdf_report(file_path, toolname, subnet_scanned, target_discovered, cve_discovered, hydra_scan_result, system_path)
         else:
             return
 

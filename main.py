@@ -137,8 +137,7 @@ class main(SplitFluentWindow):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.gvm_management = gvm(self)
-
-
+        
         kali_os = "app/qemu/kali/kali.qcow2"
 
         global global_kali
@@ -348,17 +347,18 @@ class main(SplitFluentWindow):
             )
             print("Aucun profil")
             return
-
+        
         # Get the current date in European French format
         current_date = datetime.datetime.now().strftime("%d-%m-%Y")
         default_filename = f"rapport_{selected_profile}_{current_date}.pdf"
 
         options = QFileDialog.Options()
         file_path, _ = QFileDialog.getSaveFileName(self, 'Sauvegarder le rapport', default_filename, 'PDF (*.pdf)', options=options)
+        self.current_dir = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 
         if file_path:
             generer_pdf = RapportGenerateur(selected_profile)
-            generer_pdf.GenererRapport(Profile=selected_profile, file_path=file_path)
+            generer_pdf.GenererRapport(Profile=selected_profile, file_path=file_path, system_path=self.current_dir)
             self.infofly(
                 icone=InfoBarIcon.SUCCESS,
                 titre="Rapport généré avec succès",
