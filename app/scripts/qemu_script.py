@@ -1,7 +1,6 @@
 import subprocess
-import threading
 import paramiko
-import time
+import os
 
 class QemuManager:
     def __init__(self) -> None:
@@ -22,7 +21,15 @@ class QemuManager:
             '-vnc', ':0'
         ]
 
-        self.qemu_process = subprocess.Popen(qemu_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        # Redirect QEMU output to null device to hide the terminal window
+        with open(os.devnull, 'w') as fnull:
+            self.qemu_process = subprocess.Popen(
+                qemu_command,
+                stdin=subprocess.PIPE,
+                stdout=fnull,
+                stderr=fnull,
+                text=True
+            )
 
     def terminate_qemu(self):
         print(self.qemu_process)

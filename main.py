@@ -3,13 +3,12 @@ import sys
 import subprocess
 import paramiko
 import datetime
-import xml.etree.ElementTree as ET
 
-from PyQt5.QtCore import QObject, Qt, QThread, pyqtSignal, QSize, QTimer
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QSize, QTimer
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog
 
-from qfluentwidgets import SplitFluentWindow, FluentIcon, Flyout, InfoBarIcon, FlyoutAnimationType, MessageBox, NavigationItemPosition, SplashScreen
+from qfluentwidgets import SplitFluentWindow, Flyout, InfoBarIcon, FlyoutAnimationType, NavigationItemPosition, SplashScreen
 
 from app.interface.scan_interface import ScanInterface
 from app.interface.engagement_interface import EngagementInterface
@@ -19,7 +18,6 @@ from app.interface.evaluation_interface import EvaluationInterface
 from app.interface.qemu_interface import QemuInterface
 
 from app.scripts.qemu_script import QemuManager
-from app.engagement import CustomMessageBox
 from app.scripts.profile_script import Profile
 from app.scripts.gvm_script import gvm
 from app.scripts.rapport_script import RapportGenerateur

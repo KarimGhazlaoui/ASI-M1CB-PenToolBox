@@ -2,7 +2,6 @@
 import sys
 
 from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout
 
 from qfluentwidgets import MessageBoxBase, SubtitleLabel, LineEdit, PushButton, setTheme, Theme

@@ -1,6 +1,6 @@
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, PageBreak, Image
 from datetime import datetime
 import json

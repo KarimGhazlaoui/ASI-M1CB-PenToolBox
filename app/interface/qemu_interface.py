@@ -1,9 +1,6 @@
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QPainter, QColor
-from PyQt5.QtWidgets import QWidget, QTableWidgetItem, QVBoxLayout
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from qvncwidget import QVNCWidget
-
-from qfluentwidgets import FluentIcon as FIF, InfoBarIcon
 from .Ui_QemuInterface import Ui_QemuInterface
 
 class QemuInterface(QWidget, Ui_QemuInterface):
