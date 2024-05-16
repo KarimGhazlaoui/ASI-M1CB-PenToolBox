@@ -6,37 +6,6 @@ class QemuManager:
     def __init__(self) -> None:
         self.qemu_process = None
 
-    def start_qemu(self):
-        qemu_command = [
-            r'app\qemu\qemu-system-x86_64.exe',
-            '-m', '8G',
-            '-smp', '4',
-            '-hda', r'app\qemu\kali\kali.qcow2',
-            '-usbdevice', 'tablet',
-            '-name', 'kali',
-            '-nic', 'user,restrict=off,model=virtio,id=vmnic,hostfwd=tcp::60022-:22,hostfwd=tcp::9392-:9392',
-            '-monitor', 'stdio',
-            '-vga', 'vmware',
-            '-loadvm', 'gvm',
-            '-vnc', ':0'
-        ]
-
-        # Redirect QEMU output to null device to hide the terminal window
-        with open(os.devnull, 'w') as fnull:
-            self.qemu_process = subprocess.Popen(
-                qemu_command,
-                stdin=subprocess.PIPE,
-                stdout=fnull,
-                stderr=fnull,
-                text=True
-            )
-
-    def terminate_qemu(self):
-        print(self.qemu_process)
-        if self.qemu_process:
-            self.qemu_process.terminate()
-            self.qemu_process.wait()
-
     def prep_kali(self):
 
         # SSH connection parameters

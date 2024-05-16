@@ -3,12 +3,13 @@ import sys
 import subprocess
 import paramiko
 import datetime
+import os 
 
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QSize, QTimer
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog
 
-from qfluentwidgets import SplitFluentWindow, Flyout, InfoBarIcon, FlyoutAnimationType, NavigationItemPosition, SplashScreen
+from qfluentwidgets import SplitFluentWindow, Flyout, InfoBarIcon, FlyoutAnimationType, NavigationItemPosition, SplashScreen, Dialog
 
 from app.interface.scan_interface import ScanInterface
 from app.interface.engagement_interface import EngagementInterface
@@ -22,9 +23,12 @@ from app.scripts.profile_script import Profile
 from app.scripts.gvm_script import gvm
 from app.scripts.rapport_script import RapportGenerateur
 from app.automatisation import scan_vers_cible
-from app.scripts.qemu_script import QemuManager
 
 import app.resource.resource_rc
+
+# Variable permettant de vérifier la présence de l'image de Kali
+global_kali = None
+global_lecture_seul = None
 
 # Classe Worker pour effectuer des tâches longues en arrière-plan
 class Worker(QThread):
@@ -90,20 +94,33 @@ class QemuWorker(QThread):
         super().__init__()
 
     def run(self):
-        qemu_command = [
-            r'app\qemu\qemu-system-x86_64.exe',
-            '-m', '8G',
-            '-smp', '4',
-            '-hda', r'app\qemu\kali\kali.qcow2',
-            '-usbdevice', 'tablet',
-            '-name', 'kali',
-            '-nic', 'user,restrict=off,model=virtio,id=vmnic,hostfwd=tcp::60022-:22,hostfwd=tcp::9392-:9392',
-            '-monitor', 'stdio',
-            '-vga', 'vmware',
-            '-loadvm', 'gvm',
-            '-vnc', ':0'
-        ]
-        self.qemu_process = subprocess.Popen(qemu_command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        global global_kali
+        if global_kali is not None:
+            qemu_command = [
+                r'app\qemu\qemu-system-x86_64.exe',
+                '-m', '8G',
+                '-smp', '4',
+                '-hda', r'app\qemu\kali\kali.qcow2',
+                '-usbdevice', 'tablet',
+                '-name', 'kali',
+                '-nic', 'user,restrict=off,model=virtio,id=vmnic,hostfwd=tcp::60022-:22,hostfwd=tcp::9392-:9392',
+                '-monitor', 'stdio',
+                '-vga', 'vmware',
+                '-loadvm', 'gvm',
+                '-vnc', ':0'
+            ]
+
+            # Redirect QEMU output to null device to hide the terminal window
+            with open(os.devnull, 'w') as fnull:
+                self.qemu_process = subprocess.Popen(
+                    qemu_command,
+                    stdin=subprocess.PIPE,
+                    stdout=fnull,
+                    stderr=fnull,
+                    text=True
+                )
+        else:
+            print("kali.qcow2 n'existe pas")
 
     def terminate_qemu(self):
         if self.qemu_process:
@@ -120,6 +137,13 @@ class main(SplitFluentWindow):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.gvm_management = gvm(self)
+
+
+        kali_os = "app/qemu/kali/kali.qcow2"
+
+        global global_kali
+        if os.path.exists(kali_os):
+            global_kali = 1
 
         self.worker = None
         
@@ -151,8 +175,10 @@ class main(SplitFluentWindow):
         self.addSubInterface(self.cibleInterface, QIcon(":/images/cible.png"), 'Scan - Cibles Détectées')
         self.addSubInterface(self.vulnerabiliteInterface, QIcon(":/images/vulnerabilite.png"), 'Exploitation - Vulnérabilités')
         self.addSubInterface(self.evaluationInterface, QIcon(":/images/strike.png"), 'Exploitation - Evaluation des Vulnérabilités')
-        self.navigationInterface.addSeparator()
-        self.addSubInterface(self.qemuInterface, QIcon(":/images/kali.png"), 'Kali - Control Center')
+        global global_kali
+        if global_kali == 1:
+            self.navigationInterface.addSeparator()
+            self.addSubInterface(self.qemuInterface, QIcon(":/images/kali.png"), 'Kali - Control Center')
 
         # Ajout d'un élément de navigation pour générer un rapport
         self.navigationInterface.addItem(
@@ -196,10 +222,32 @@ class main(SplitFluentWindow):
         self.show()
         
         # Start QEMU in a separate thread
-        self.qemu_worker = QemuWorker()
-        self.qemu_worker.start()
-        self.qemu_worker.finished.connect(self.qemu_started)
-        QApplication.processEvents()
+        global global_kali
+        if global_kali == 1:
+            self.qemu_worker = QemuWorker()
+            self.qemu_worker.start()
+            self.qemu_worker.finished.connect(self.qemu_started)
+            QApplication.processEvents()
+        else:
+            self.showDialog(title="⛔ Kali.qcow2 est inexistant ! ⛔", content="VM Kali manquante, merci de l'ajouter dans app/qemu/kali \n L'application sera en lecture seul jusqu'à son ajout 😥")
+
+    def showDialog(self, title, content):
+        w = Dialog(title, content, self)
+        w.setTitleBarVisible(False)
+        # w.setContentCopyable(True)
+        w.yesButton.setText("Accepter")
+        w.cancelButton.setText("Quitter")
+        if w.exec():
+            print('lecture seul activé')
+            global global_lecture_seul
+            global_lecture_seul = 1
+        else:
+            if self.worker and self.worker.isRunning():
+                self.worker.finished.connect(lambda: self.worker.deleteLater())  # Wait for the worker to finish before deleting
+                self.worker.stop()  # Stop the worker
+                print("Worker arrêté")
+            else:
+                QApplication.quit()
     
     def qemu_started(self):
         self.qemu_manager.prep_kali()
@@ -329,18 +377,22 @@ class main(SplitFluentWindow):
 
     # Fonction pour lancer un scan
     def lancer_scan(self):
-        if self.scanInterface.actualprofile.text():
-            selected_profile = self.scanInterface.loadprofile.currentText()
-            cible = self.scanInterface.sousreseau.text()
+        global global_lecture_seul
+        if global_lecture_seul is None:
+            if self.scanInterface.actualprofile.text():
+                selected_profile = self.scanInterface.loadprofile.currentText()
+                cible = self.scanInterface.sousreseau.text()
 
-            self.worker = Worker(self.automatisation.lancement_scan, sousreseau=cible, optionscan=1)
-            self.worker.result.connect(lambda result, cible=cible: self.scan_finished(selected_profile, cible, result))
-            self.worker.finished.connect(self.worker.deleteLater)
+                self.worker = Worker(self.automatisation.lancement_scan, sousreseau=cible, optionscan=1)
+                self.worker.result.connect(lambda result, cible=cible: self.scan_finished(selected_profile, cible, result))
+                self.worker.finished.connect(self.worker.deleteLater)
 
-            self.worker.start()
+                self.worker.start()
+            else:
+                self.infofly(icone=InfoBarIcon.ERROR,titre="Aucun profil sélectionné",contenu="Merci de charger ou créer un profil",cible=self.scanInterface.lancementscan)
+                print("Aucun profil sélectionné ou chargé")
         else:
-            self.infofly(icone=InfoBarIcon.ERROR,titre="Aucun profil sélectionné",contenu="Merci de charger ou créer un profil",cible=self.scanInterface.lancementscan)
-            print("Aucun profil sélectionné ou chargé")
+            self.infofly(icone=InfoBarIcon.ERROR,titre="Lecture Seul",contenu="PenToolBox est en lecture seul",cible=self.scanInterface.lancementscan)
 
     # Fonction appelée lorsque le scan est terminé
     def scan_finished(self, selected_profile, cibles, result):
@@ -366,15 +418,19 @@ class main(SplitFluentWindow):
 
     # Fonction pour scanner les vulnérabilités
     def vulnerabilite_scan(self):
-        cible_table = self.cibleInterface.TableContents()
-        if cible_table:
-            print("table vulnerabilite test")
-            print(cible_table)
-            vulnerabilite = self.gvm_management.scan_vulnerabilite(cible_table)
-            print(vulnerabilite)
-            #SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface)
+        global global_lecture_seul
+        if global_lecture_seul is None:
+            cible_table = self.cibleInterface.TableContents()
+            if cible_table:
+                print("table vulnerabilite test")
+                print(cible_table)
+                vulnerabilite = self.gvm_management.scan_vulnerabilite(cible_table)
+                print(vulnerabilite)
+                #SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface)
+            else:
+                self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune cible disponible", contenu="Aucune cible n'existe, effectuer un scan au préalable", cible=self.cibleInterface.scanvulnerabilite)
         else:
-            self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune cible disponible", contenu="Aucune cible n'existe, effectuer un scan au préalable", cible=self.cibleInterface.scanvulnerabilite)
+            self.infofly(icone=InfoBarIcon.ERROR, titre="Lecture Seul", contenu="PenToolBox est en lecture seul", cible=self.cibleInterface.scanvulnerabilite)
 
     # Fonction appelée lorsque le scan des vulnérabilités est terminé
     def vulnerabilite_scan_finished(self, vulnerabilite):
@@ -484,31 +540,35 @@ class main(SplitFluentWindow):
 
     # Fonction pour transférer les cibles vers hydra
     def evaluation_transition(self):
-        cible_21 = set()
-        vulnerabilite_cible = []
-        
-        if self.vulnerabiliteInterface.vulnerabilitetable.rowCount() > 0:
+        global global_lecture_seul
+        if global_lecture_seul is None:
+            cible_21 = set()
+            vulnerabilite_cible = []
+            
+            if self.vulnerabiliteInterface.vulnerabilitetable.rowCount() > 0:
 
-            for row in range(self.vulnerabiliteInterface.vulnerabilitetable.rowCount()):
-                row_data = []
-                for column in range(self.vulnerabiliteInterface.vulnerabilitetable.columnCount()):
-                    item = self.vulnerabiliteInterface.vulnerabilitetable.item(row, column)
-                    if item is not None:
-                        row_data.append(item.text())
-                    else:
-                        row_data.append("")  # Add empty string if cell is empty
-                vulnerabilite_cible.append(row_data)
+                for row in range(self.vulnerabiliteInterface.vulnerabilitetable.rowCount()):
+                    row_data = []
+                    for column in range(self.vulnerabiliteInterface.vulnerabilitetable.columnCount()):
+                        item = self.vulnerabiliteInterface.vulnerabilitetable.item(row, column)
+                        if item is not None:
+                            row_data.append(item.text())
+                        else:
+                            row_data.append("")  # Add empty string if cell is empty
+                    vulnerabilite_cible.append(row_data)
 
-            for item in vulnerabilite_cible:
-                if item[1] == '21':
-                    cible_21.add(item[0])
+                for item in vulnerabilite_cible:
+                    if item[1] == '21':
+                        cible_21.add(item[0])
 
-            hydra_cibles = list(cible_21)
-            self.evaluationInterface.hydracomboboxtarget.clear()
-            self.evaluationInterface.hydracomboboxtarget.addItems(hydra_cibles)
+                hydra_cibles = list(cible_21)
+                self.evaluationInterface.hydracomboboxtarget.clear()
+                self.evaluationInterface.hydracomboboxtarget.addItems(hydra_cibles)
+            else:
+                print("liste des vulnerabilites vide")
+                self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune vulnérabilité",contenu="Aucune vulnérabilité détecté, faite un scan de vulnérabilité avant d'effectuer une évaluation", cible=self.vulnerabiliteInterface.scanvulnerabilite)
         else:
-            print("liste des vulnerabilites vide")
-            self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune vulnérabilité",contenu="Aucune vulnérabilité détecté, faite un scan de vulnérabilité avant d'effectuer une évaluation", cible=self.vulnerabiliteInterface.scanvulnerabilite)
+            self.infofly(icone=InfoBarIcon.ERROR, titre="Lecture Seul",contenu="PenToolBox est en lecture seul", cible=self.vulnerabiliteInterface.scanvulnerabilite)
 
     # Fonction pour vérifier la sécurité du mot de passe
     def check_strength(self):
@@ -534,14 +594,20 @@ class main(SplitFluentWindow):
 
     # Fonction pour lancer Hydra
     def hydra_lancement(self):
-        hydra_cible = self.evaluationInterface.hydracomboboxtarget.currentText()
-        self.evaluationInterface.hydra_progressbar.setVisible(True)
-
-        command = f"cd passwords-and-usernames && hydra -L top-usernames-shortlist.txt -P xato-net-10-million-passwords-10.txt {hydra_cible} ftp"
-        self.worker = SSHWorker(command=command)
-        self.worker.update_signal.connect(self.evaluationInterface.evaluationterminal.append)
-        self.worker.finished_signal.connect(self.hydra_fin)  # Se connecter au slot pour la fin
-        self.worker.start()
+        global global_lecture_seul
+        if global_lecture_seul is None:
+            hydra_cible = self.evaluationInterface.hydracomboboxtarget.currentText()
+            if hydra_cible.count() == 0:
+                self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune cible disponible",contenu="Merci de scanner les vulnérabilités avant !", cible=self.evaluationInterface.hydraexecution)
+            else:
+                self.evaluationInterface.hydra_progressbar.setVisible(True)
+                command = f"cd passwords-and-usernames && hydra -L top-usernames-shortlist.txt -P xato-net-10-million-passwords-10.txt {hydra_cible} ftp"
+                self.worker = SSHWorker(command=command)
+                self.worker.update_signal.connect(self.evaluationInterface.evaluationterminal.append)
+                self.worker.finished_signal.connect(self.hydra_fin)  # Se connecter au slot pour la fin
+                self.worker.start()
+        else:
+            self.infofly(icone=InfoBarIcon.ERROR, titre="Lecture Seul",contenu="PenToolBox est en lecture seul", cible=self.evaluationInterface.hydraexecution)
 
     # Fonction appelée à la fin de Hydra
     def hydra_fin(self):
@@ -565,7 +631,6 @@ class main(SplitFluentWindow):
 
     # Fonction pour gérer l'événement de fermeture
     def closeEvent(self, event):
-        self.qemu_manager = QemuManager()
         # Handle the close event
         reply = QMessageBox.question(self, 'Message',
                                      "Êtes-vous sûr de vouloir fermer la PenToolBox ?", QMessageBox.Yes |
