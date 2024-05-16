@@ -45,7 +45,7 @@ Plus simple et plus rapide à mettre en oeuvre, à télécharger ci-dessous :
 
 ## Installation manuelle
 
-Pour installer l'outil, suivez ces étapes :
+Pour installer les dépendances nécessaires à ce projet, vous pouvez utiliser le fichier `requirements.txt` fourni. Exécutez la commande suivante :
 
 1. Clonez ce dépôt sur votre machine locale.
 ```console
@@ -62,6 +62,17 @@ pip install -r requirements.txt
 6. Lancez l'application en exécutant le script principal.
 ```console
 python main.py
+```
+
+3.1 Installation manuel des packages :
+Si vous préférez installer les packages individuellement, vous pouvez utiliser les commandes suivantes :
+```console
+pip install paramiko
+pip install "PyQt-Fluent-Widgets[full]" -i https://pypi.org/simple/
+pip install netifaces
+pip install qvncwidget
+pip install reportlab
+pip install bs4
 ```
 
 ## Contribution
