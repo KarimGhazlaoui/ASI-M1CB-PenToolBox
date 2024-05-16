@@ -12,12 +12,13 @@ Cet outil a été conçu dans le but d'aider les professionnels de la cybersécu
 
 Exclusivement fonctionnel sur Windows actuellement, il incorpore des fonctionnalités inédites tel que l'intégration complète de Kali.
 Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans aucunte limite, tout en permettant en cas de besoin d'avoir la main directement sur celle-ci.
-![](./images/demo.gif)
+
+
+## Fonctionnalités Clé
+
 <p align="center">
   <img src="./images/demo.gif">
 </p>
-
-## Fonctionnalités Clé
 
 - **Reconnaissance**: Exploration des systèmes cibles pour collecter des informations initiales sur les cibles potentielles.
 - **Scanning**: Analyse des systèmes pour identifier les ports ouverts, les services en cours d'exécution et les vulnérabilités connues.
@@ -25,12 +26,24 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 - **Post-Exploitation**: Phase de maintien de l'accès et d'exploration plus approfondie des systèmes compromis.
 - **Reporting**: Génération de rapports détaillés pour documenter les résultats des tests de pénétration.
 
+<p align="center">
+  <img src="./images/rapport.gif">
+</p>
+
 ## Commentaires
 
-Veuillez noter que l'outil est encore en phase de développement initial.  
-Par conséquent, il n'est pas compilé et nécessite d'être lancé via Python en utilisant main.py.
+Veuillez noter que l'outil est encore en phase de développement. 
+Des bugs critique peuvent encore exister.
 
-## Installation
+## Utilisation
+
+✨ Une version compilé pour windows est disponible ✨
+
+Plus simple et plus rapide à mettre en oeuvre, à télécharger ci-dessous :
+
+[Page des releases](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/executable)<br>
+
+## Installation manuelle
 
 Pour installer l'outil, suivez ces étapes :
 
@@ -45,7 +58,7 @@ pip install -r requirements.txt
 ```
 4. Télécharger kali.qcow2 et déplacer le dans le répertoire \app\qemu\kali
    
-     [Cliquer ici pour télécharger kali.qcow2](https://drive.google.com/file/d/1VP1MUOJtDXOZRZ7zv1BVgJsDXaBzgdfI/view?usp=sharing)<br>
+     [Cliquer ici pour télécharger kali.qcow2](https://drive.google.com/file/d/19TkXSNwm6RxxnFsOpfuVuTnsTJIXfvee/view?usp=sharing)<br>
 6. Lancez l'application en exécutant le script principal.
 ```console
 python main.py
@@ -55,7 +68,7 @@ python main.py
 Les contributions sont les bienvenues ! Si vous souhaitez contribuer à ce projet, n'hésitez pas à ouvrir une issue pour discuter des changements que vous souhaitez apporter.
 
 ## Licence
-Ce projet est sous licence <span style="font-size:1.5em; font-weight:bold;">GPL-2.0</span>.
+Ce projet est sous licence <span style="font-size:1.5em; font-weight:bold;">GPL-3.0</span>.
 
 ### Licences des Composants Utilisés
 
