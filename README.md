@@ -37,7 +37,7 @@ Des bugs critique peuvent encore exister.
 
 ## Utilisation
 
-Une version compilé pour windows est disponible 🆕
+✨ Une version compilé pour windows est disponible ✨
 
 Plus simple et plus rapide à mettre en oeuvre, à télécharger ci-dessous :
 
