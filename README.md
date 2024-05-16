@@ -46,7 +46,7 @@ Plus simple et plus rapide à mettre en oeuvre, à télécharger ci-dessous :
 
 [Page des releases](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/executable)<br>
 
-## Installation
+## Installation manuelle
 
 Pour installer l'outil, suivez ces étapes :
 
