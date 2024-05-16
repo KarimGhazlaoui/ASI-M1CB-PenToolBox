@@ -65,6 +65,7 @@ python main.py
 ```
 
 3.1 Installation manuel des packages :
+
 Si vous préférez installer les packages individuellement, vous pouvez utiliser les commandes suivantes :
 ```console
 pip install paramiko
