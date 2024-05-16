@@ -14,14 +14,11 @@ Exclusivement fonctionnel sur Windows actuellement, il incorpore des fonctionnal
 Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans aucunte limite, tout en permettant en cas de besoin d'avoir la main directement sur celle-ci.
 
 
+## Fonctionnalités Clé
 
 <p align="center">
   <img src="./images/demo.gif">
 </p>
-
-
-
-## Fonctionnalités Clé
 
 - **Reconnaissance**: Exploration des systèmes cibles pour collecter des informations initiales sur les cibles potentielles.
 - **Scanning**: Analyse des systèmes pour identifier les ports ouverts, les services en cours d'exécution et les vulnérabilités connues.
