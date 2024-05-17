@@ -482,7 +482,7 @@ class main(SplitFluentWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.vulnerabilite_status_debut)
 
-        self.timer.start(10000)
+        self.timer.start(15000)
 
     def vulnerabilite_status_debut(self):
         print("global_taskid :", self.global_taskid)
