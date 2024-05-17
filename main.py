@@ -7,7 +7,7 @@ import os
 
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QSize, QTimer
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog, QListWidgetItem
 
 from qfluentwidgets import SplitFluentWindow, Flyout, InfoBarIcon, FlyoutAnimationType, NavigationItemPosition, SplashScreen, Dialog
 
@@ -26,9 +26,11 @@ from app.automatisation import scan_vers_cible
 
 import app.resource.resource_rc
 
-# Variable permettant de vérifier la présence de l'image de Kali
+# Variable globale pour gérer les fonctions dans les différentes classes
 global_kali = None
 global_lecture_seul = None
+global_scanbutton = None
+global_gvm = None
 
 # Classe Worker pour effectuer des tâches longues en arrière-plan
 class Worker(QThread):
@@ -192,12 +194,17 @@ class main(SplitFluentWindow):
 
         # Connexion des signaux aux slots
         self.scanInterface.boutonprofilecreation.clicked.connect(self.profiles_creation)
+
         self.scanInterface.chargementprofile.clicked.connect(self.chargement_profile)
+
         self.scanInterface.lancementscan.clicked.connect(self.lancer_scan)
+
         self.cibleInterface.scanvulnerabilite.clicked.connect(self.vulnerabilite_scan)
+
         self.vulnerabiliteInterface.scanvulnerabilite.clicked.connect(self.evaluation_transition)
 
         self.evaluationInterface.passwordchecker.textChanged.connect(self.check_strength)
+
         self.evaluationInterface.hydraexecution.clicked.connect(self.hydra_lancement)
 
         self.profiles_initialisation()
@@ -279,15 +286,23 @@ class main(SplitFluentWindow):
 
         if not profile:
             print("Aucun texte entré")
+            self.infofly(icone=InfoBarIcon.ERROR,titre="Profil",contenu="Merci d'entrer un nom de profil",cible=self.scanInterface.boutonprofilecreation)
             return
         if profile in self.profile_manager.list_profiles():
             print("Profil déjà existant")
+            self.infofly(icone=InfoBarIcon.ERROR,titre="Profil",contenu="Le profil existe déjà",cible=self.scanInterface.boutonprofilecreation)
             return
         
         variables = {}
         self.profile_manager.save_profile(variables,profile)
         self.profiles_initialisation()
+        self.scanInterface.actualprofile.setText(profile)
+        liste_profile = self.scanInterface.loadprofile.findText(profile)
+        print(liste_profile)
+        if liste_profile:
+            self.scanInterface.loadprofile.setCurrentIndex(liste_profile)
         print("Profil créé avec succès")
+        
 
     # Fonction pour charger un profil
     def chargement_profile(self):
@@ -378,36 +393,45 @@ class main(SplitFluentWindow):
 
     # Fonction pour lancer un scan
     def lancer_scan(self):
+        global global_scanbutton
         global global_lecture_seul
-        if global_lecture_seul is None:
-            if self.scanInterface.actualprofile.text():
-                selected_profile = self.scanInterface.loadprofile.currentText()
-                cible = self.scanInterface.sousreseau.text()
+        if global_scanbutton !=1:
+            if global_lecture_seul is None:
+                global_scanbutton = 1
+                if self.scanInterface.actualprofile.text():
+                    selected_profile = self.scanInterface.actualprofile.text()
+                    cible = self.scanInterface.sousreseau.text()
 
-                self.worker = Worker(self.automatisation.lancement_scan, sousreseau=cible, optionscan=1)
-                self.worker.result.connect(lambda result, cible=cible: self.scan_finished(selected_profile, cible, result))
-                self.worker.finished.connect(self.worker.deleteLater)
+                    if cible:
+                        self.profile_manager.add_or_update_variable(selected_profile, "reseau_cible", cible)
+                    else:
+                        ip_address, cidr = self.automatisation.get_network_interface_info()
+                        cible = ip_address + "/" + cidr
+                        self.profile_manager.add_or_update_variable(selected_profile, "reseau_cible", cible)
+                        self.scanInterface.sousreseau.setText(str(cible))
 
-                self.worker.start()
+                    self.worker = Worker(self.automatisation.lancement_scan, sousreseau=cible, optionscan=1)
+                    self.worker.result.connect(lambda result, cible=cible: self.scan_finished(selected_profile, cibles=cible, result=result))
+                    self.worker.finished.connect(self.worker.deleteLater)
+
+                    self.worker.start()
+                else:
+                    self.infofly(icone=InfoBarIcon.ERROR,titre="Aucun profil sélectionné",contenu="Merci de charger ou créer un profil",cible=self.scanInterface.lancementscan)
+                    print("Aucun profil sélectionné ou chargé")
             else:
-                self.infofly(icone=InfoBarIcon.ERROR,titre="Aucun profil sélectionné",contenu="Merci de charger ou créer un profil",cible=self.scanInterface.lancementscan)
-                print("Aucun profil sélectionné ou chargé")
+                self.infofly(icone=InfoBarIcon.ERROR,titre="Lecture Seul",contenu="PenToolBox est en lecture seul",cible=self.scanInterface.lancementscan)
         else:
-            self.infofly(icone=InfoBarIcon.ERROR,titre="Lecture Seul",contenu="PenToolBox est en lecture seul",cible=self.scanInterface.lancementscan)
+            self.infofly(icone=InfoBarIcon.ERROR,titre="Scan en cours",contenu="Merci d'attendre la fin du scan",cible=self.scanInterface.lancementscan)
 
     # Fonction appelée lorsque le scan est terminé
     def scan_finished(self, selected_profile, cibles, result):
-        if result:   
-            self.profile_manager.add_or_update_variable(selected_profile, "reseau_cible", cibles)
-        else:
-            ip_address, cidr = self.automatisation.get_network_interface_info()
-            result = ip_address + "/" + cidr
-            self.profile_manager.add_or_update_variable(selected_profile, "reseau_cible", cibles)
-        
+
         # Mettre à jour les cibles détectées dans le profil
         self.profile_manager.add_or_update_variable(selected_profile, "cible_detecte", result)
 
-        print(result)
+        print("Cible a scan :", cibles)
+
+        print("Résultat du scan :", result)
 
         self.scanInterface.sousreseau.setText(str(cibles))
 
@@ -417,19 +441,27 @@ class main(SplitFluentWindow):
         # Passer à l'interface des cibles après le traitement des résultats du scan
         SplitFluentWindow.switchTo(self, interface=self.cibleInterface)
 
+        # Réactiver le boutton de scan
+        global global_scanbutton
+        global_scanbutton = None
+
     # Fonction pour scanner les vulnérabilités
     def vulnerabilite_scan(self):
+        global global_gvm
         global global_lecture_seul
         if global_lecture_seul is None:
-            cible_table = self.cibleInterface.TableContents()
-            if cible_table:
-                print("table vulnerabilite test")
-                print(cible_table)
-                vulnerabilite = self.gvm_management.scan_vulnerabilite(cible_table)
-                print(vulnerabilite)
-                #SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface)
+            if global_gvm is None:
+                cible_table = self.cibleInterface.TableContents()
+                if cible_table:
+                    global_gvm = 1
+                    print(cible_table)
+                    vulnerabilite = self.gvm_management.scan_vulnerabilite(cible_table)
+                    print(vulnerabilite)
+                    #SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface)
+                else:
+                    self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune cible disponible", contenu="Aucune cible n'existe, effectuer un scan au préalable", cible=self.cibleInterface.scanvulnerabilite)
             else:
-                self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune cible disponible", contenu="Aucune cible n'existe, effectuer un scan au préalable", cible=self.cibleInterface.scanvulnerabilite)
+                self.infofly(icone=InfoBarIcon.ERROR, titre="GVM", contenu="GVM est en cours de fonctionnement", cible=self.cibleInterface.scanvulnerabilite)
         else:
             self.infofly(icone=InfoBarIcon.ERROR, titre="Lecture Seul", contenu="PenToolBox est en lecture seul", cible=self.cibleInterface.scanvulnerabilite)
 
@@ -461,7 +493,7 @@ class main(SplitFluentWindow):
     # Fonction appelée à la fin de Hydra
     def gvm_fin(self, callback):
         gvm_resultat = self.worker.output  # Accéder à l'attribut de sortie
-        selected_profile = self.scanInterface.loadprofile.currentText()
+        selected_profile = self.scanInterface.actualprofile.text()
         self.profile_manager.add_or_update_variable(selected_profile, "gvm_resultat", gvm_resultat)
         print("Sortie de la commande gvm :", gvm_resultat)
         if callback:
@@ -598,22 +630,23 @@ class main(SplitFluentWindow):
         global global_lecture_seul
         if global_lecture_seul is None:
             hydra_cible = self.evaluationInterface.hydracomboboxtarget.currentText()
-            if hydra_cible.count() == 0:
-                self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune cible disponible",contenu="Merci de scanner les vulnérabilités avant !", cible=self.evaluationInterface.hydraexecution)
-            else:
+            if hydra_cible:
                 self.evaluationInterface.hydra_progressbar.setVisible(True)
                 command = f"cd passwords-and-usernames && hydra -L top-usernames-shortlist.txt -P xato-net-10-million-passwords-10.txt {hydra_cible} ftp"
                 self.worker = SSHWorker(command=command)
                 self.worker.update_signal.connect(self.evaluationInterface.evaluationterminal.append)
                 self.worker.finished_signal.connect(self.hydra_fin)  # Se connecter au slot pour la fin
                 self.worker.start()
+            else:
+                self.infofly(icone=InfoBarIcon.ERROR, titre="Aucune cible disponible",contenu="Merci de scanner les vulnérabilités avant !", cible=self.evaluationInterface.hydraexecution)
+                
         else:
             self.infofly(icone=InfoBarIcon.ERROR, titre="Lecture Seul",contenu="PenToolBox est en lecture seul", cible=self.evaluationInterface.hydraexecution)
 
     # Fonction appelée à la fin de Hydra
     def hydra_fin(self):
         hydra_resultat = self.worker.output  # Accéder à l'attribut de sortie
-        selected_profile = self.scanInterface.loadprofile.currentText()
+        selected_profile = self.scanInterface.actualprofile.text()
         self.profile_manager.add_or_update_variable(selected_profile, "hydra_resultat", hydra_resultat)
         print("Sortie de la commande Hydra :", hydra_resultat)
         self.evaluationInterface.hydra_progressbar.setVisible(False)
