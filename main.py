@@ -207,6 +207,7 @@ class main(SplitFluentWindow):
         self.qemu_manager = QemuManager()
         # Préparation paramètre fenêtre PyQt5
         self.resize(1280, 800)
+        self.setMaximumSize(1280, 800)
         self.setWindowTitle("KGB - PenToolBox")
         self.setWindowIcon(QIcon(':/images/logo.png'))
 

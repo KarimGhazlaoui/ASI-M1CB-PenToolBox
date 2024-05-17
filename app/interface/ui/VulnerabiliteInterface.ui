@@ -6,14 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1520</width>
-    <height>1024</height>
+    <width>1280</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>804</width>
-    <height>858</height>
+    <width>1280</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>800</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -296,7 +302,7 @@
               <property name="minimumSize">
                <size>
                 <width>700</width>
-                <height>500</height>
+                <height>400</height>
                </size>
               </property>
               <attribute name="horizontalHeaderDefaultSectionSize">

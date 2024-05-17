@@ -6,14 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1444</width>
-    <height>914</height>
+    <width>1280</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1444</width>
-    <height>914</height>
+    <width>1280</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>800</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -37,15 +43,15 @@
      <property name="spacing">
       <number>12</number>
      </property>
-     <item row="1" column="0">
-      <spacer name="horizontalSpacer_11">
+     <item row="2" column="1">
+      <spacer name="verticalSpacer">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>20</width>
+         <height>40</height>
         </size>
        </property>
       </spacer>
@@ -53,10 +59,10 @@
      <item row="0" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="topMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
        <item>
         <widget class="IconWidget" name="IconWidget_3">
@@ -121,33 +127,33 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+       <item>
         <widget class="CardWidget" name="QVNC">
          <property name="minimumSize">
           <size>
-           <width>1280</width>
-           <height>800</height>
+           <width>1024</width>
+           <height>640</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>1280</width>
-           <height>800</height>
+           <width>1024</width>
+           <height>640</height>
           </size>
          </property>
         </widget>
        </item>
       </layout>
      </item>
-     <item row="2" column="1">
-      <spacer name="verticalSpacer">
+     <item row="1" column="0">
+      <spacer name="horizontalSpacer_11">
        <property name="orientation">
-        <enum>Qt::Vertical</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
-         <height>40</height>
+         <width>40</width>
+         <height>20</height>
         </size>
        </property>
       </spacer>

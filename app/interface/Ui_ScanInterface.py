@@ -14,9 +14,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_ScanInterface(object):
     def setupUi(self, ScanInterface):
         ScanInterface.setObjectName("ScanInterface")
-        ScanInterface.resize(942, 711)
-        ScanInterface.setMinimumSize(QtCore.QSize(942, 711))
-        ScanInterface.setMaximumSize(QtCore.QSize(9999, 9999))
+        ScanInterface.resize(1280, 800)
+        ScanInterface.setMinimumSize(QtCore.QSize(1280, 800))
+        ScanInterface.setMaximumSize(QtCore.QSize(1280, 800))
         self.gridLayout = QtWidgets.QGridLayout(ScanInterface)
         self.gridLayout.setContentsMargins(20, 40, 20, 20)
         self.gridLayout.setSpacing(12)
