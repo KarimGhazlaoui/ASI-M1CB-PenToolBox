@@ -63,7 +63,7 @@ Des bugs critique peuvent encore exister.
 
 Plus simple et plus rapide à mettre en oeuvre, télécharger la dernière version ci-dessous :
 
-  [***Bêta 1.0.2***](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/1.0.2)<br>
+  [***Bêta 1.0.3***](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/1.0.3)<br>
 
 
 ## Installation manuelle
