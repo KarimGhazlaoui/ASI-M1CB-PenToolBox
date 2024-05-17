@@ -93,38 +93,9 @@ Ce projet est sous licence <span style="font-size:1.5em; font-weight:bold;">GPL-
 
 ### Licences des Composants Utilisés
 
-- PyQt5 : Licence GPL v3
-- Qemu : Licence GPL v2
-- Kali : Licence GPL v3
-- attrs : Licence MIT
-- bcrypt : Licence Apache 2.0
-- cffi : Licence MIT
-- chardet : Licence LGPL v2.1
-- colorthief : Licence MIT
-- cryptography : Licence Apache 2.0
-- darkdetect : Licence MIT
-- freetype-py : Licence GPL v3
-- Jinja2 : Licence BSD
-- MarkupSafe : Licence BSD
-- netifaces : Licence MIT
-- numpy : Licence BSD
-- paramiko : Licence LGPL v2.1
-- pillow : Licence HPND
-- pyasn1 : Licence BSD
-- pyasn1_modules : Licence BSD
-- pycairo : Licence LGPL v2.1
-- pycparser : Licence BSD
-- pyDes : Licence MIT
-- PyNaCl : Licence Apache 2.0
-- PyPDF2 : Licence BSD
-- PyQt-Fluent-Widgets : Licence LGPL v3
-- PyQt5-Frameless-Window : Licence MIT
-- PyQt5-Qt5 : Licence GPL v3
-- PyQt5-sip : Licence GPL v3
-- pywin32 : Licence PSF
-- qvncwidget : Licence GPL v3
-- reportlab : Licence BSD
-- rlPyCairo : Licence MIT
-- scipy : Licence BSD
-- service-identity : Licence MIT
-- six : Licence MIT
+1. **Paramiko** : LGPL 2.1
+2. **PyQt** : GPL 3.0
+3. **Netifaces** : MIT
+4. **QVNCWidget** : GPL 3.0
+5. **ReportLab** : BSD
+6. **Beautiful Soup (bs4)** : MIT
