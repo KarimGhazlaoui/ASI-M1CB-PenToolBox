@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="./app/resource/images/agreement.png">
+</p>
+
+
 # Code de Conduite en Cybersécurité
 
 ## Notre Engagement
