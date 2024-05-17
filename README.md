@@ -16,20 +16,22 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 
 ## Fonctionnalités Clé
 
-<p align="center">
-  <img src="./images/demo.gif">
-</p>
-
 - **Reconnaissance**: Exploration des systèmes cibles pour collecter des informations initiales sur les cibles potentielles.
 - **Scanning**: Analyse des systèmes pour identifier les ports ouverts, les services en cours d'exécution et les vulnérabilités connues.
 - **Exploitation**: Utilisation des vulnérabilités détectées pour accéder aux systèmes cibles et obtenir un accès non autorisé.
 - **Post-Exploitation**: Phase de maintien de l'accès et d'exploration plus approfondie des systèmes compromis.
+
+<p align="center">
+  <img src="./images/demo.gif">
+</p>
+
 - **Reporting**: Génération de rapports détaillés pour documenter les résultats des tests de pénétration.
-- **Lecture Seul**: Sans VM Kali, l'application est toujours fonctionnel dans un format léger pour charger un profil et vérifier les vulnérabilitées ou les résultats obtenu.
 
 <p align="center">
   <img src="./images/rapport.gif">
 </p>
+
+- **Lecture Seul**: Sans VM Kali, l'application est toujours fonctionnel dans un format léger pour charger un profil et vérifier les vulnérabilitées ou les résultats obtenu.
 
 ## Commentaires
 
