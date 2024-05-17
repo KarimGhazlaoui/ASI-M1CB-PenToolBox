@@ -49,6 +49,16 @@ Des bugs critique peuvent encore exister.
 
 ## Utilisation
 
+**Recommendation PC :**
+
+**CPU** : 6 coeurs
+
+**RAM** : 8 Gb
+
+**Espace Disque** : 15 Go | **En Lecture seul** : 250 Mo
+
+**--------------------------------------------------------------------------------------------------------------**
+
 ✨ Une version compilé pour windows est disponible ✨
 
 Plus simple et plus rapide à mettre en oeuvre, télécharger la dernière version ci-dessous :
