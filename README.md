@@ -25,16 +25,15 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 
 ## Fonctionnalités Clé
 
-- **Reconnaissance**: Exploration des systèmes cibles pour collecter des informations initiales sur les cibles potentielles.
-- **Scanning**: Analyse des systèmes pour identifier les ports ouverts, les services en cours d'exécution et les vulnérabilités connues.
-- **Exploitation**: Utilisation des vulnérabilités détectées pour accéder aux systèmes cibles et obtenir un accès non autorisé.
-- **Post-Exploitation**: Phase de maintien de l'accès et d'exploration plus approfondie des systèmes compromis.
+- 👀 **Reconnaissance**: Exploration des systèmes cibles pour collecter des informations initiales sur les cibles potentielles.
+- 🔍 **Scanning**: Analyse des systèmes pour identifier les ports ouverts, les services en cours d'exécution et les vulnérabilités connues.
+- 💪 **Exploitation**: Utilisation des vulnérabilités détectées pour accéder aux systèmes cibles et obtenir un accès non autorisé.
 
   <p align="center">
     <img src="./images/demo.gif">
   </p>
 
-- **Reporting**: Génération de rapports détaillés pour documenter les résultats des tests de pénétration.
+- 📄 **Reporting**: Génération de rapports détaillés pour documenter les résultats des tests de pénétration.
 
   <p align="center">
     <img src="./images/rapport.gif">
