@@ -35,7 +35,7 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 
 <img src="./images/rapport.gif">
 
-- **Lecture Seul**: Sans VM Kali, l'application est toujours fonctionnel dans un format léger pour charger un profil et vérifier les vulnérabilitées ou les résultats obtenu.
+- ▶ **Lecture Seul**: Sans VM Kali, l'application est toujours fonctionnel dans un format léger pour charger un profil et vérifier les vulnérabilitées ou les résultats obtenu.
 
 ## Commentaires
 
