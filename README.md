@@ -29,15 +29,11 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 - 🔍 **Scanning**: Analyse des systèmes pour identifier les ports ouverts, les services en cours d'exécution et les vulnérabilités connues.
 - 💪 **Exploitation**: Utilisation des vulnérabilités détectées pour accéder aux systèmes cibles et obtenir un accès non autorisé.
 
-  <p align="center">
-    <img src="./images/demo.gif">
-  </p>
+<img src="./images/demo.gif">
 
 - 📄 **Reporting**: Génération de rapports détaillés pour documenter les résultats des tests de pénétration.
 
-  <p align="center">
-    <img src="./images/rapport.gif">
-  </p>
+<img src="./images/rapport.gif">
 
 - **Lecture Seul**: Sans VM Kali, l'application est toujours fonctionnel dans un format léger pour charger un profil et vérifier les vulnérabilitées ou les résultats obtenu.
 
