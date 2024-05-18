@@ -47,6 +47,8 @@ Des bugs critique peuvent encore exister.
 
 **Recommendation PC :**
 
+**OS** : Windows 10
+
 **CPU** : 6 coeurs
 
 **RAM** : 8 Gb
