@@ -17,7 +17,8 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
  
 - [Fonctionnalités Clé](#fonctionnalités-clé)
 - [Commentaires](#commentaires)
-- [Utilisation](#utilisation)
+- [Configuration recommandé](#configuration-recommandé)
+- [Executable prêt à l'empoloi](#executable-prêt-à-lemploi-)
 - [Installation manuelle](#installation-manuelle)
 - [Contribution](#contribution)
 - [Licence](#licence)
@@ -42,7 +43,7 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 Veuillez noter que l'outil est encore en phase de développement. 
 Des bugs critique peuvent encore exister.
 
-## Utilisation
+## Configuration Recommandé
 
 **Recommendation PC :**
 
@@ -52,9 +53,9 @@ Des bugs critique peuvent encore exister.
 
 **Espace Disque** : 15 Go | **En Lecture seul** : 250 Mo
 
-**--------------------------------------------------------------------------------------------------------------**
+## Executable prêt à l'emploi ✨
 
-✨ Une version compilé pour windows est disponible ✨
+Une version compilé pour windows est disponible 🎉🎉
 
 Plus simple et plus rapide à mettre en oeuvre, télécharger la dernière version ci-dessous :
 
