@@ -16,7 +16,7 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 ## Table des matières
  
 - [Fonctionnalités Clé](#fonctionnalités-clé)
-- [Commentaires](#commentaires)
+- [Information Importante](#information-importante)
 - [Configuration recommandé](#configuration-recommandé)
 - [Executable prêt à l'empoloi](#executable-prêt-à-lemploi-)
 - [Installation manuelle](#installation-manuelle)
@@ -38,7 +38,7 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 
 - ▶ **Lecture Seul**: Sans VM Kali, l'application est toujours fonctionnel dans un format léger pour charger un profil et vérifier les vulnérabilitées ou les résultats obtenu.
 
-## Commentaires
+## Information importante
 
 Veuillez noter que l'outil est encore en phase de développement. 
 Des bugs critique peuvent encore exister.
