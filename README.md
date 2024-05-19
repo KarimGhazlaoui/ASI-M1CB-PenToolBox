@@ -51,7 +51,7 @@ Des bugs critique peuvent encore exister.
 > 
 > Il s'agit d'un faux positif, ci-dessous le lien vers le scan VirusTotal
 > 
-> [**Lien scan VirusTotal**](https://www.virustotal.com/gui/file/4461875f43957bc4a4cbe585bcd98bc8539a92f53a415679c5b86e83e73cfcc8)
+> [<img src="images/VirusTotal.png">](https://www.virustotal.com/gui/file/4461875f43957bc4a4cbe585bcd98bc8539a92f53a415679c5b86e83e73cfcc8)
 
 ## Configuration Recommandé
 
