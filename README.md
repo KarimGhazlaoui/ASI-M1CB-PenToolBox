@@ -16,8 +16,9 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 ## Table des matières
  
 - [Fonctionnalités Clé](#fonctionnalités-clé)
-- [Commentaires](#commentaires)
-- [Utilisation](#utilisation)
+- [Information Importante](#information-importante)
+- [Configuration recommandé](#configuration-recommandé)
+- [Executable prêt à l'empoloi](#executable-prêt-à-lemploi-)
 - [Installation manuelle](#installation-manuelle)
 - [Contribution](#contribution)
 - [Licence](#licence)
@@ -25,31 +26,28 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 
 ## Fonctionnalités Clé
 
-- **Reconnaissance**: Exploration des systèmes cibles pour collecter des informations initiales sur les cibles potentielles.
-- **Scanning**: Analyse des systèmes pour identifier les ports ouverts, les services en cours d'exécution et les vulnérabilités connues.
-- **Exploitation**: Utilisation des vulnérabilités détectées pour accéder aux systèmes cibles et obtenir un accès non autorisé.
-- **Post-Exploitation**: Phase de maintien de l'accès et d'exploration plus approfondie des systèmes compromis.
+- 👀 **Reconnaissance**: Exploration des systèmes cibles pour collecter des informations initiales sur les cibles potentielles.
+- 🔍 **Scanning**: Analyse des systèmes pour identifier les ports ouverts, les services en cours d'exécution et les vulnérabilités connues.
+- 💪 **Exploitation**: Utilisation des vulnérabilités détectées pour accéder aux systèmes cibles et obtenir un accès non autorisé.
 
-<p align="center">
-  <img src="./images/demo.gif">
-</p>
+<img src="./images/demo.gif">
 
-- **Reporting**: Génération de rapports détaillés pour documenter les résultats des tests de pénétration.
+- 📄 **Reporting**: Génération de rapports détaillés pour documenter les résultats des tests de pénétration.
 
-<p align="center">
-  <img src="./images/rapport.gif">
-</p>
+<img src="./images/rapport.gif">
 
-- **Lecture Seul**: Sans VM Kali, l'application est toujours fonctionnel dans un format léger pour charger un profil et vérifier les vulnérabilitées ou les résultats obtenu.
+- ▶ **Lecture Seul**: Sans VM Kali, l'application est toujours fonctionnel dans un format léger pour charger un profil et vérifier les vulnérabilitées ou les résultats obtenu.
 
-## Commentaires
+## Information importante
 
 Veuillez noter que l'outil est encore en phase de développement. 
 Des bugs critique peuvent encore exister.
 
-## Utilisation
+## Configuration Recommandé
 
 **Recommendation PC :**
+
+**OS** : Windows 10
 
 **CPU** : 6 coeurs
 
@@ -57,54 +55,56 @@ Des bugs critique peuvent encore exister.
 
 **Espace Disque** : 15 Go | **En Lecture seul** : 250 Mo
 
-**--------------------------------------------------------------------------------------------------------------**
+## Executable prêt à l'emploi ✨
 
-✨ Une version compilé pour windows est disponible ✨
+Une version compilé pour windows est disponible 🎉🎉
 
 Plus simple et plus rapide à mettre en oeuvre, télécharger la dernière version ci-dessous :
 
-  [***Bêta 1.0.2***](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/1.0.2)<br>
+  [***Bêta 1.0.3***](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/1.0.3)<br>
 
 
 ## Installation manuelle
 
-Pour installer les dépendances nécessaires à ce projet, vous pouvez utiliser le fichier `requirements.txt` fourni. Exécutez la commande suivante :
+Pour installer les dépendances nécessaires à ce projet, vous pouvez utiliser le fichier `requirements.txt` fourni. 
 
-1. **Clonez ce dépôt sur votre machine locale.**
+Exécutez les commandes suivante :
+
+- 1 **Clonez ce dépôt sur votre machine locale.**
   ```console
   git clone https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox.git
   cd ASI-M1CB-PenToolBox
   ```
 
-2. **Installer Microsoft C++ Build Tools - Développement Desktop en C++ (Obligatoire pour netifaces)**
+- 2 **Installer Microsoft C++ Build Tools - Développement Desktop en C++ (Obligatoire pour netifaces)**
 
     [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools)<br>
 
 
-3. **Assurez-vous d'avoir les dépendances requises installées.**
+- 3 **Assurez-vous d'avoir les dépendances requises installées.**
   ```console
   pip install -r requirements.txt
   ```
-  3.1. **Installation manuel des packages**
+ - 3.1 **Installation manuel des packages**
 
-  Si vous préférez installer les packages individuellement, vous pouvez utiliser les commandes suivantes :
-  ```console
-  pip install paramiko
-  pip install "PyQt-Fluent-Widgets[full]" -i https://pypi.org/simple/
-  pip install netifaces
-  pip install qvncwidget
-  pip install reportlab
-  pip install bs4
-  ```
+      Si vous préférez installer les packages individuellement, vous pouvez utiliser les commandes suivantes :
+    ```console
+    pip install paramiko
+    pip install "PyQt-Fluent-Widgets[full]" -i https://pypi.org/simple/
+    pip install netifaces
+    pip install qvncwidget
+    pip install reportlab
+    pip install bs4
+    ```
 
-5. **Télécharger kali.qcow2 et déplacer le dans le répertoire \app\qemu\kali**
+- 5 **Télécharger kali.qcow2 et placer le dans le répertoire \app\qemu\kali**
    
      [***Cliquer ici pour télécharger kali.qcow2***](https://drive.google.com/file/d/19TkXSNwm6RxxnFsOpfuVuTnsTJIXfvee/view?usp=sharing)<br>
 
 > [!IMPORTANT]
 > Sans l'image ***kali.qcow2***, l'application sera en lecture seul
      
-6. **Lancez l'application en exécutant le script principal.**
+- 6 **Lancez l'application en exécutant le script principal.**
   ```console
   python main.py
   ```
