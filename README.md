@@ -2,9 +2,10 @@
   <img src="./app/resource/images/logo.png">
 </p>
 
-# PenToolBox
-
+<h3 align="center">KGB - PenToolBox</h3>
+<p align="center">
 PenToolBox est un un outil développé dans le cadre du projet de ma première année de master en ingénierie en cybersécurité.
+</p>
 
 ## Introduction
 
@@ -12,6 +13,8 @@ Cet outil a été conçu dans le but d'aider les professionnels de la cybersécu
 
 Exclusivement fonctionnel sur Windows actuellement, il incorpore des fonctionnalités inédites tel que l'intégration complète de Kali.
 Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans aucunte limite, tout en permettant en cas de besoin d'avoir la main directement sur celle-ci.
+
+
 
 ## Table des matières
  
@@ -42,6 +45,8 @@ Permettant ainsi d'utiliser les derniers outils de pentesting disponible sans au
 
 Veuillez noter que l'outil est encore en phase de développement. 
 Des bugs critique peuvent encore exister.
+
+
 
 ## Configuration Recommandé
 
