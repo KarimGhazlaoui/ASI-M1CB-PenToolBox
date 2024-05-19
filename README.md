@@ -4,7 +4,7 @@
 
 <h3 align="center">KGB - PenToolBox</h3>
 <p align="center">
-PenToolBox est un un outil développé dans le cadre du projet de ma première année de master en ingénierie en cybersécurité.
+PenToolBox est un un outil développé dans le cadre du projet de master en ingénierie en cybersécurité.
 </p>
 
 ## Introduction
