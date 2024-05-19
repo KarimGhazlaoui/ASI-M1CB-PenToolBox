@@ -9,7 +9,7 @@ class scan_vers_cible:
         pass
 
     def lancement_scan(self, sousreseau=None, optionscan=1):
-        print(sousreseau)
+        print("lancement du scan, réseau cible :", sousreseau)
 
         self.cibleliste = []
         self.nmap_sortie = ""
@@ -21,7 +21,7 @@ class scan_vers_cible:
             command_to_execute = "sudo nmap -PE -sn " + ip_address + "/" + cidr
             completion_indicator = "command completed"
 
-            print("Executing Nmap scan...")
+            print("Lancement du scan Nmap...")
             for line in ssh_manager.execute_command_live(command_to_execute):
                 print(line)
                 self.nmap_sortie += line + '\n'
@@ -33,20 +33,29 @@ class scan_vers_cible:
             command_to_execute = "nmap -sn " + sousreseau
             completion_indicator = "command completed"
 
-            print("Executing Nmap scan...")
+            print("Lancement du scan Nmap...")
             for line in ssh_manager.execute_command_live(command_to_execute):
                 print(line)
                 self.nmap_sortie += line + '\n'
                 if line.strip('\n') == completion_indicator:
                     break
 
-        pattern = r"Nmap scan report for (\S+)\nHost is up \((\d+\.\d+s) latency\)\."
+        print("sortie nmap :", self.nmap_sortie)
+
+        # Updated pattern to capture FQDN if it exists
+        pattern = r"Nmap scan report for (\S+)(?: \((.*?)\))?\nHost is up \((\d+\.\d+s) latency\)\."
         matches = re.findall(pattern, self.nmap_sortie)
 
         for match in matches:
-            ip = match[0]
-            status = f"Host is up ({match[1]} latency)."
-            self.cibleliste.append([ip, status])
+            if self.is_valid_ip(match[0]):
+                ip = match[0]
+                fqdn = match[1] if match[1] else '❌'
+            else:
+                fqdn = match[0]
+                ip = match[1]
+            
+            status = f"✅ Host is up ({match[2]} latency)."
+            self.cibleliste.append([ip, fqdn, status])  # Correct order: IP, FQDN, status
 
         return self.cibleliste
 
@@ -65,3 +74,9 @@ class scan_vers_cible:
 
         return ip_address, cidr
     
+    def is_valid_ip(self, ip):
+        try:
+            ipaddress.ip_address(ip)
+            return True
+        except ValueError:
+            return False

@@ -452,6 +452,7 @@ class main(SplitFluentWindow):
         if global_lecture_seul is None:
             if global_gvm is None:
                 cible_table = self.cibleInterface.TableContents()
+                print("vulnerabilite_scan, cible_table :", cible_table)
                 if cible_table:
                     global_gvm = 1
                     print(cible_table)

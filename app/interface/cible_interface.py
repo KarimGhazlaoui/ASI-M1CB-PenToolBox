@@ -15,7 +15,7 @@ class CibleInterface(QWidget, Ui_CibleInterface):
 
     def cibletable(self, parent=None, scan_results=None):
 
-        print("cibletable value :" + str(scan_results))
+        print("cibletable :" + str(scan_results))
 
         if scan_results == None:
             print("Liste vide")
@@ -28,31 +28,31 @@ class CibleInterface(QWidget, Ui_CibleInterface):
 
             self.table.setWordWrap(True)
             self.table.setRowCount(len(scan_results))
-            self.table.setColumnCount(2)
+            self.table.setColumnCount(3)
 
 
-            # Add table data
+            # Ajouter des données à la table
 
             for i, cible in enumerate(scan_results):
-                for j in range(2):
+                for j in range(3):
                     self.table.setItem(i, j, QTableWidgetItem(cible[j]))
 
-            # Set horizontal header and hide vertical header
-            self.table.setHorizontalHeaderLabels(['IP', 'Status'])
+            # Définir l'en-tête horizontale et masquer l'en-tête verticale
+            self.table.setHorizontalHeaderLabels(['IP', 'FQDN', 'Status'])
             self.table.verticalHeader().hide()
     
     def TableContents(self):
         table_adresse = []
         selectedRows = self.table.selectedItems()
-        if len(selectedRows) == 0:  # If no row selected, print every first column
+        if len(selectedRows) == 0:  # Si aucune ligne n'est sélectionnée, imprimer chaque première colonne
             for row in range(self.table.rowCount()):
-                item = self.table.item(row, 0)  # Accessing only the first column
+                item = self.table.item(row, 0)  # Accéder uniquement à la première colonne
                 table_adresse.append(item.text())
             return table_adresse
-        else:  # If row(s) selected, print only selected row(s) first column
+        else:  # Si une ou plusieurs lignes sont sélectionnées, imprimer uniquement la première colonne des lignes sélectionnées
             selectedRowsSet = set([item.row() for item in selectedRows])
             for row in selectedRowsSet:
-                item = self.table.item(row, 0)  # Accessing only the first column
+                item = self.table.item(row, 0)  # Accéder uniquement à la première colonne
                 table_adresse.append(item.text())
             return table_adresse
         
@@ -69,7 +69,7 @@ class CibleInterface(QWidget, Ui_CibleInterface):
 
         task_id, status, progression = liveprogress
         
-        # Update TASK ID
+        # Mettre à jour l'ID de la tâche
         task_id_item = QTableWidgetItem(task_id)
         task_id_item.setTextAlignment(Qt.AlignCenter)
         self.table2.setItem(0, 0, task_id_item)
@@ -77,7 +77,7 @@ class CibleInterface(QWidget, Ui_CibleInterface):
         bold_font = QFont()
         bold_font.setBold(True)
         
-        # Update STATUS and set its color
+        # Mettre à jour le STATUT et définir sa couleur
         status_item = QTableWidgetItem(status)
         status_item.setTextAlignment(Qt.AlignCenter)
         status_item.setFont(bold_font)
@@ -91,10 +91,10 @@ class CibleInterface(QWidget, Ui_CibleInterface):
             status_item.setForeground(QBrush(QColor('white')))
         self.table2.setItem(0, 1, status_item)
         
-        # Update PROGRESSION with a progress bar
+        # Mettre à jour la PROGRESSION avec une barre de progression
         progress_bar = QProgressBar()
         progress_bar.setValue(progression)
         self.table2.setCellWidget(0, 2, progress_bar)
-        # Center the progress bar in the cell
-        self.table2.setColumnWidth(2, 150)  # Adjust the width of the column to fit the progress bar
-        progress_bar.setAlignment(Qt.AlignCenter)  # Center the progress bar text
+        # Centrer la barre de progression dans la cellule
+        self.table2.setColumnWidth(2, 150)  # Ajuster la largeur de la colonne pour s'adapter à la barre de progression
+        progress_bar.setAlignment(Qt.AlignCenter)  # Centrer le texte de la barre de progression
