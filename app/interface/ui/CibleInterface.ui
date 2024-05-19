@@ -417,7 +417,13 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>80</height>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>130</height>
         </size>
        </property>
        <property name="rowCount">

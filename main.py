@@ -31,6 +31,8 @@ global_kali = None
 global_lecture_seul = None
 global_scanbutton = None
 global_gvm = None
+global_rapportid = None
+global_taskid = None
 
 # Classe Worker pour effectuer des tâches longues en arrière-plan
 class Worker(QThread):
@@ -506,11 +508,14 @@ class main(SplitFluentWindow):
 
     # Fonction pour vérifier le status du scan OpenVas
     def vulnerabilite_status(self, rapportid, taskid):
+        global global_rapportid
+        global global_taskid
+
         print("vulnerabilite_status taskid :", taskid)
         print("vulnerabilite_status rapportid :", rapportid)
-        self.global_rapportid = rapportid
-        self.global_taskid = taskid
-        livestatus = [self.global_taskid, 'Création', 0]
+        global_rapportid = rapportid
+        global_taskid = taskid
+        livestatus = [global_taskid, 'Création', 0]
         self.cibleInterface.gvm_progress_table(liveprogress=livestatus)
         self.status = ""
         self.timer = QTimer()
@@ -519,15 +524,17 @@ class main(SplitFluentWindow):
         self.timer.start(15000)
 
     def vulnerabilite_status_debut(self):
-        print("global_taskid :", self.global_taskid)
-        if self.global_taskid is not None:
-            commandssh = f"""gvm-cli socket --xml '<get_tasks task_id="{self.global_taskid}"/>' --pretty"""
+        global global_taskid
+        print("global_taskid :", global_taskid)
+        if global_taskid is not None:
+            commandssh = f"""gvm-cli socket --xml '<get_tasks task_id="{global_taskid}"/>' --pretty"""
             self.worker = SSHWorker(command=commandssh)
             #self.worker.update_signal.connect(self.cibleInterface.vulnerabilitelive.append)
             self.worker.finished_signal.connect(self.vulnerabilite_status_fin)
             self.worker.start()
 
     def vulnerabilite_status_fin(self):
+        global global_taskid
         self.gvm_management = gvm(self)
         reponse_status = self.worker.output
         print(reponse_status)
@@ -540,21 +547,25 @@ class main(SplitFluentWindow):
         print("retour status :", self.status)
 
         if self.status[0] == "Done":
+            print("Scan vulnérabilités terminé !")
+            self.vulnerabilite_traitement_start()
             self.timer.stop()
-            self.vulnerabilite_traitement_start
 
-        livestatus = [self.global_taskid, self.status[0], self.status[1]]
+        livestatus = [global_taskid, self.status[0], self.status[1]]
 
         self.cibleInterface.gvm_progress_table(liveprogress=livestatus)
 
     def vulnerabilite_traitement_start(self):
-        if self.global_rapportid is not None:
-            commandssh = f"""gvm-cli socket --xml "<get_reports report_id='{self.global_rapportid}' apply_overrides='0' levels='hml' min_qod='50' first='1' rows='1000' sort='severity' ignore_pagination='1' details='1' format_id='c1645568-627a-11e3-a660-406186ea4fc5'/>" --pretty"""
+        global global_rapportid
+        print("vulnerabilite_traitement_start, global_rapportid :", global_rapportid)
+        if global_rapportid is not None:
+            commandssh = f"""gvm-cli socket --xml "<get_reports report_id='{global_rapportid}' apply_overrides='0' levels='hml' min_qod='50' first='1' rows='1000' sort='severity' ignore_pagination='1' details='1' format_id='c1645568-627a-11e3-a660-406186ea4fc5'/>" --pretty"""
             self.worker = SSHWorker(command=commandssh)
             self.worker.finished_signal.connect(self.vulnerabilite_traitement_fin)
             self.worker.start()
 
     def vulnerabilite_traitement_fin(self):
+        global global_gvm
         self.gvm_management = gvm(self)
         rapport = self.worker.output
         lines = rapport.strip().split('\n')
@@ -567,10 +578,16 @@ class main(SplitFluentWindow):
         cve_csv = self.gvm_management.traitement_csv(donnee_csv=rapport_clean)
 
         # Sauvegarde dans le profile du résultat
-        #selected_profile = self.scanInterface.loadprofile.currentText()
-        #self.profile_manager.add_or_update_variable(selected_profile, "vulnerabilite_detecte", cve_csv)
+        selected_profile = self.scanInterface.actualprofile.text()
+        self.profile_manager.add_or_update_variable(selected_profile, "vulnerabilite_detecte", cve_csv)
 
         self.vulnerabiliteInterface.chargement_vulnerabilite(vulnerabilite_results=cve_csv)
+
+        # Réactive le scan GVM
+        global_gvm = None
+
+        # Passer à l'interface d'exploitation après le traitement des résultats du scan
+        SplitFluentWindow.switchTo(self, interface=self.vulnerabiliteInterface) 
 
     # Fonction pour transférer les cibles vers hydra
     def evaluation_transition(self):
