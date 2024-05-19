@@ -71,7 +71,7 @@ Une version compilé pour windows est disponible 🎉🎉
 
 Plus simple et plus rapide à mettre en oeuvre, télécharger la dernière version ci-dessous :
 
-  [***KGB - PenToolBox : Bêta 1.0.3***](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/1.0.3)
+  [***KGB - PenToolBox : v0.1-Bêta3***](https://github.com/KarimGhazlaoui/ASI-M1CB-PenToolBox/releases/tag/v0.1-B3)
 
 
 ## Installation manuelle
