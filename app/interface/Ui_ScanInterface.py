@@ -349,7 +349,7 @@ class Ui_ScanInterface(object):
         ScanInterface.setWindowTitle(_translate("ScanInterface", "Form"))
         self.lancementscan.setText(_translate("ScanInterface", "Lancer le scan"))
         self.TitleLabel.setText(_translate("ScanInterface", "Réseau Cible"))
-        self.BodyLabel.setText(_translate("ScanInterface", "Sous-réseau cible :"))
+        self.BodyLabel.setText(_translate("ScanInterface", "Sous-réseau cible ou FQDN :"))
         self.sousreseau.setPlaceholderText(_translate("ScanInterface", "192.168.0.0/24"))
         self.BodyLabel_2.setText(_translate("ScanInterface", "Par défaut, le réseau du pc host sera utilisé."))
         self.StrongBodyLabel.setText(_translate("ScanInterface", "Scans - Cible et Reconnaissance"))
