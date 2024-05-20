@@ -76,9 +76,7 @@ Plus simple et plus rapide à mettre en oeuvre, télécharger la dernière versi
 
 ## Installation manuelle
 
-Pour installer les dépendances nécessaires à ce projet, vous pouvez utiliser le fichier `requirements.txt` fourni. 
-
-Exécutez les commandes suivante :
+Pour une utilisation depuis le code source, exécutez les commandes suivante :
 
 - 1 **Clonez ce dépôt sur votre machine locale.**
   ```console
