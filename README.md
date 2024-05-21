@@ -127,9 +127,11 @@ Ce projet est sous licence <span style="font-size:1.5em; font-weight:bold;">GPL-
 
 ## Licences des Composants Utilisés
 
-1. **Paramiko** : LGPL 2.1
-2. **PyQt** : GPL 3.0
-3. **Netifaces** : MIT
-4. **QVNCWidget** : GPL 3.0
-5. **ReportLab** : BSD
-6. **Beautiful Soup (bs4)** : MIT
+1. **Qemu** : GPL 2.0
+2. **Kali** : GPL 3.0
+3. **Paramiko** : LGPL 2.1
+4. **PyQt** : GPL 3.0
+5. **Netifaces** : MIT
+6. **QVNCWidget** : GPL 3.0
+7. **ReportLab** : BSD
+8. **Beautiful Soup (bs4)** : MIT
